@@ -5,7 +5,7 @@
 	<link href="http://www.tomaz.me" rel="self" />
 	<link href="http://www.tomaz.me" />
 	<id>http://www.tomaz.me</id>
-	<updated>2012-07-22T23:06:31-07:00</updated>
+	<updated>2012-11-10T21:43:28-08:00</updated>
 	<author>
 		<name>Tomaz Muraus</name>
 		<email>tomaz@tomaz.me</email>
@@ -24,89 +24,23 @@
 &lt;p&gt;First you need to create a CDN enabled container. You can do this using Libcloud or the new &lt;a href='https://mycloud.rackspace.com'&gt;Rackspace control panel&lt;/a&gt;. Depending on how frequently you are going update your APT repository it is also recommended to lower the container TTL from the default value of 3 days to 900 seconds.&lt;/p&gt;
 
 &lt;p&gt;After you have created a CDN enabled container you need to install Python script I wrote which allows you to sychronize files from a local directory to a container hosted in one of the Storage providers &lt;a href='http://libcloud.apache.org/supported_providers.html'&gt;supported by Libcloud&lt;/a&gt;.&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='console'&gt;&lt;span class='go'&gt;  sudo pip install file-syncer&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
 &lt;p&gt;Next we are going to create a dummy APT repository::&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='console'&gt;&lt;span class='go'&gt;mkdir -p /tmp/apt-test/conf&lt;/span&gt;
-&lt;span class='go'&gt;cat &amp;gt; /tmp/apt-test/conf/distributions &amp;lt;&amp;lt;DELIM&lt;/span&gt;
-&lt;span class='go'&gt;codename: precise&lt;/span&gt;
-&lt;span class='go'&gt;Components: main&lt;/span&gt;
-&lt;span class='go'&gt;Architectures: i386 amd64&lt;/span&gt;
-&lt;span class='go'&gt;DELIM&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
 &lt;p&gt;Add a test package using &lt;code&gt;reprepro&lt;/code&gt;:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='console'&gt;&lt;span class='go'&gt;wget http://us.archive.ubuntu.com/ubuntu/ubuntu/ubuntu/pool/main/a/acpi/acpi_0.09-3ubuntu1_amd64.deb&lt;/span&gt;
-&lt;span class='go'&gt;reprepro -b /tmp/apt-test/ includedeb precise acpi_0.09-3ubuntu1_amd64.deb&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
 &lt;p&gt;And test the script:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='console'&gt;&lt;span class='go'&gt;file-syncer --log-level=DEBUG --directory=/tmp/apt-test/ --username=your username --key=your api key --container-name=container name&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
 &lt;p&gt;If everything went well, you should see an output similar to this one:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='console'&gt;&lt;span class='go'&gt;22 Jul 2012 22:36:05 : INFO     : Using provider: CloudFiles (US)&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:07 : DEBUG    : Found 15 local files&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:08 : DEBUG    : Manifest doesn&amp;#39;t exist, assuming that there are no remote files&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:08 : DEBUG    : Found 0 remote files&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:08 : INFO     : To remove: 0, to upload: 15&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:08 : DEBUG    : Uploading object: db/contents.cache.db&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:08 : DEBUG    : Uploading object: dists/precise/main/binary-amd64/Packages&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:08 : DEBUG    : Uploading object: dists/precise/main/binary-i386/Release&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:08 : DEBUG    : Uploading object: dists/precise/main/binary-i386/Packages&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:08 : DEBUG    : Uploading object: db/packages.db&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:08 : DEBUG    : Uploading object: pool/main/a/acpi/acpi_0.09-3ubuntu1_amd64.deb&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:08 : DEBUG    : Uploading object: db/release.caches.db&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:08 : DEBUG    : Uploading object: db/version&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:08 : DEBUG    : Uploading object: conf/distributions&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:08 : DEBUG    : Uploading object: db/references.db&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:09 : DEBUG    : Object uploaded: dists/precise/main/binary-amd64/Packages&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:09 : DEBUG    : Uploading object: dists/precise/main/binary-i386/Packages.gz&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:09 : DEBUG    : Object uploaded: dists/precise/main/binary-i386/Packages&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:09 : DEBUG    : Uploading object: dists/precise/main/binary-amd64/Packages.gz&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:09 : DEBUG    : Object uploaded: db/release.caches.db&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:09 : DEBUG    : Uploading object: db/checksums.db&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:09 : DEBUG    : Object uploaded: dists/precise/main/binary-i386/Release&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:09 : DEBUG    : Uploading object: dists/precise/main/binary-amd64/Release&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:09 : DEBUG    : Object uploaded: conf/distributions&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:09 : DEBUG    : Uploading object: dists/precise/Release&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:09 : DEBUG    : Object uploaded: db/packages.db&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:09 : DEBUG    : Object uploaded: db/contents.cache.db&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:09 : DEBUG    : Object uploaded: db/references.db&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:09 : DEBUG    : Object uploaded: db/version&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:09 : DEBUG    : Object uploaded: pool/main/a/acpi/acpi_0.09-3ubuntu1_amd64.deb&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:10 : DEBUG    : Object uploaded: dists/precise/main/binary-amd64/Packages.gz&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:10 : DEBUG    : Object uploaded: dists/precise/main/binary-i386/Packages.gz&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:10 : DEBUG    : Object uploaded: db/checksums.db&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:10 : DEBUG    : Object uploaded: dists/precise/Release&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:10 : DEBUG    : Object uploaded: dists/precise/main/binary-amd64/Release&lt;/span&gt;
-&lt;span class='go'&gt;22 Jul 2012 22:36:11 : INFO     : Synchronization complete, took: 4.62 seconds&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
 &lt;p&gt;After the upload has finished, you can test the repository by adding it to your APT sources list:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='console'&gt;&lt;span class='go'&gt;  echo &amp;quot;deb http://c15173579.r79.cf2.rackcdn.com precise main&amp;quot; | sudo tee -a /etc/apt/sources.list.d/test-api-repo.list&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
 &lt;p&gt;We are also going to disable APT HTTP request pipeling. This step is required, because a nginx proxy running in front of the CDN doesn&amp;#8217;t seem to support HTTP/1.1 pipelining. If you skip this test apt-get update will still work, but it will get stuck on &lt;code&gt;[Waiting for headers]&lt;/code&gt; for a longer period of time.&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='console'&gt;&lt;span class='go'&gt;  echo &amp;quot;Acquire::http::Pipeline-Depth &amp;quot;0&amp;quot;;&amp;quot; | sudo tee -a /etc/apt/apt.conf.d/pipeline-workaround.conf&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
 &lt;p&gt;You can test that everything is working by issuing the following command:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='console'&gt;&lt;span class='go'&gt;  sudo apt-get update ; sudo apt-cache policy acpi&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
 &lt;p&gt;You should get an output similar to this one:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='console'&gt;&lt;span class='go'&gt;acpi:&lt;/span&gt;
-&lt;span class='go'&gt;  Installed: (none)&lt;/span&gt;
-&lt;span class='go'&gt;  Candidate: 1.6-1&lt;/span&gt;
-&lt;span class='go'&gt;  Version table:&lt;/span&gt;
-&lt;span class='go'&gt;     1.6-1 0&lt;/span&gt;
-&lt;span class='go'&gt;        500 http://us.archive.ubuntu.com/ubuntu/ precise/universe amd64 Packages&lt;/span&gt;
-&lt;span class='go'&gt;     0.09-3ubuntu1 0&lt;/span&gt;
-&lt;span class='go'&gt;        500 http://c15173579.r79.cf2.rackcdn.com/ precise/main amd64 Packages&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
 &lt;p&gt;That is it. To make sure your container is always up to date, you need synchronize it every time you add a new packages. This can be achieved in multiple ways:&lt;/p&gt;
 
 &lt;ul&gt;
@@ -204,10 +138,7 @@
 &lt;h3 id='urlparse'&gt;urlparse&lt;/h3&gt;
 
 &lt;p&gt;Functionality from &lt;code&gt;urlparse&lt;/code&gt; has been moved to &lt;code&gt;urllib.parse&lt;/code&gt;. We only use two functions from this module (quote and urlencode) so simple aliased import did the trick:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='kn'&gt;from&lt;/span&gt; &lt;span class='nn'&gt;urllib.parse&lt;/span&gt; &lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='n'&gt;quote&lt;/span&gt; &lt;span class='k'&gt;as&lt;/span&gt; &lt;span class='n'&gt;urlquote&lt;/span&gt;
-&lt;span class='kn'&gt;from&lt;/span&gt; &lt;span class='nn'&gt;urllib.parse&lt;/span&gt; &lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='n'&gt;urlencode&lt;/span&gt; &lt;span class='k'&gt;as&lt;/span&gt; &lt;span class='n'&gt;urlencode&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
 &lt;h3 id='xmlrpclib'&gt;xmlrpclib&lt;/h3&gt;
 
 &lt;p&gt;&lt;code&gt;xmlrpclib&lt;/code&gt; has been moved to &lt;code&gt;xmlrpc.client&lt;/code&gt;. Simple aliased import also solved this problem - &lt;code&gt;import xmlrpc.client as xmlrpclib&lt;/code&gt;.&lt;/p&gt;
@@ -219,42 +150,19 @@
 &lt;h2 id='2__type_and_filelike_objects'&gt;2. &lt;code&gt;file&lt;/code&gt; type and file-like objects&lt;/h2&gt;
 
 &lt;p&gt;&lt;code&gt;file&lt;/code&gt; type has been removed in Python 3. To resolve this problem, I have used code similar to the one bellow in the places where we use &lt;code&gt;file&lt;/code&gt; type.&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;PY3&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-    &lt;span class='kn'&gt;from&lt;/span&gt; &lt;span class='nn'&gt;io&lt;/span&gt; &lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='n'&gt;FileIO&lt;/span&gt; &lt;span class='k'&gt;as&lt;/span&gt; &lt;span class='nb'&gt;file&lt;/span&gt;
 
-&lt;span class='k'&gt;class&lt;/span&gt; &lt;span class='nc'&gt;MyFileLikeObject&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;file&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
-    &lt;span class='o'&gt;...&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
 &lt;h2 id='3_generators_and__method'&gt;3. Generators and &lt;code&gt;.next()&lt;/code&gt; method.&lt;/h2&gt;
 
 &lt;p&gt;For consistency with other magic methods, &lt;code&gt;next&lt;/code&gt; method in Python 3 has been renamed to &lt;code&gt;__next__&lt;/code&gt;. To make it work with all the versions, I have used built-in &lt;code&gt;next&lt;/code&gt; function in Python &amp;gt;= 3 and object &lt;code&gt;.next()&lt;/code&gt; method in older versions.&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;sys&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;version_info&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;3&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
-    &lt;span class='nb'&gt;next&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;__builtins__&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;next&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
-&lt;span class='k'&gt;else&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-    &lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;next&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
-        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;next&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
 &lt;h2 id='4_exception_handling'&gt;4. Exception handling&lt;/h2&gt;
 
 &lt;p&gt;Sadly, there is no unified way to handle exceptions and extract the exception object in Python 2.5 and Python 3.x. This means I needed to use a hacky &lt;code&gt;sys.exc_info()[1]&lt;/code&gt; approach to extract the raised exception&lt;/p&gt;
 
 &lt;p&gt;Old code:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='k'&gt;try&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-    &lt;span class='n'&gt;foo&lt;/span&gt;
-&lt;span class='k'&gt;except&lt;/span&gt; &lt;span class='ne'&gt;Exception&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;e&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-    &lt;span class='k'&gt;print&lt;/span&gt; &lt;span class='n'&gt;e&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
 &lt;p&gt;New code:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='k'&gt;try&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-    &lt;span class='n'&gt;foo&lt;/span&gt;
-&lt;span class='k'&gt;except&lt;/span&gt; &lt;span class='ne'&gt;Exception&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-    &lt;span class='n'&gt;e&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;sys&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;exc_info&lt;/span&gt;&lt;span class='p'&gt;()[&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
-    &lt;span class='k'&gt;print&lt;/span&gt; &lt;span class='n'&gt;e&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
 &lt;p&gt;One of the PyPy developers has &lt;a href='http://www.reddit.com/r/Python/comments/mxufx/django_python_3_port_all_tests_now_pass_on_272/'&gt;posted on reddit&lt;/a&gt; that this approach is very slow in PyPy. Luckily, besides the tests, there aren&amp;#8217;t many places in our code where we need access to the exception object so this should be a good compromise for now.&lt;/p&gt;
 
 &lt;h2 id='5_filter_map_dictkeys'&gt;5. filter, map, dict.keys()&lt;/h2&gt;
@@ -268,24 +176,13 @@
 &lt;h2 id='7__and_encoding'&gt;7. &lt;code&gt;xml.etree.ElementTree.tostring&lt;/code&gt; and encoding&lt;/h2&gt;
 
 &lt;p&gt;In Python 3 this method returns &lt;a href='http://hg.python.org/cpython/rev/57e631f088d7/'&gt;bytes by default&lt;/a&gt;. To preserve the old behavior and get a string back, I have used a code similar to one bellow:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;PY3&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-    &lt;span class='n'&gt;encoding&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;unicode&amp;#39;&lt;/span&gt;
-&lt;span class='k'&gt;else&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-    &lt;span class='n'&gt;encoding&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='bp'&gt;None&lt;/span&gt;
 
-&lt;span class='n'&gt;data&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;tostring&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;root&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;encoding&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;encoding&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
 &lt;h2 id='8_encodehex'&gt;8. encode(&amp;#8216;hex&amp;#8217;)&lt;/h2&gt;
 
 &lt;p&gt;We had multiple places in the code where we did something like this:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='n'&gt;value&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;os&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;urandom&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;8&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;encode&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;hex&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
 &lt;p&gt;Hex encoding has been removed from Python 3. I have preserved backward compatibility by using &lt;code&gt;binascii&lt;/code&gt; module:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='n'&gt;value&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;binascii&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;hexlify&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;os&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;urandom&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;8&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
 &lt;h2 id='9_octal_numbers'&gt;9. Octal numbers&lt;/h2&gt;
 
 &lt;p&gt;In Python 3 there is a special backward-incompatible (and strange) syntax for octal numbers - e.g. &lt;code&gt;0o755&lt;/code&gt;. We only use octal number in one place and this has been easily resolved by using &lt;code&gt;int&lt;/code&gt; to convert a string to a number with base 8 - &lt;code&gt;int(&amp;#39;755&amp;#39;, 8)&lt;/code&gt;.&lt;/p&gt;
@@ -437,7 +334,7 @@
 &lt;p&gt;May has been a very busy and important month for us. We have finally manged to finalize and release a long awaited version 0.5.0.&lt;/p&gt;
 
 &lt;p&gt;Part of the reason that we have finally managed to release 0.5.0 this month was that me and &lt;a href='http://paul.querna.org/'&gt;Paul Querna&lt;/a&gt; were present at the Apache Retreat in Ireland where we have spent some time hacking on Libcloud and polishing the last few features which were missing for the release.&lt;/p&gt;
-&lt;div style='text-align: center;'&gt;&lt;a href='http://libcloud.apache.org' target='_blank'&gt;&lt;img src='/images/libcloud_logo.png' align='middle' style='border: none !important;' /&gt;&lt;/a&gt;&lt;/div&gt;&lt;br /&gt;
+&lt;div style='text-align: center;'&gt;&lt;a target='_blank' href='http://libcloud.apache.org'&gt;&lt;img src='/images/libcloud_logo.png' style='border: none !important;' align='middle' /&gt;&lt;/a&gt;&lt;/div&gt;&lt;br /&gt;
 &lt;p&gt;Overall, Libcloud 0.5.0 is a big step forward and represents a big milestone for the project. It includes many new features, improvements and new compute drivers.&lt;/p&gt;
 
 &lt;h3 id='major_changes_in_libcloud_050'&gt;Major changes in Libcloud 0.5.0&lt;/h3&gt;
@@ -477,7 +374,7 @@
 &lt;h3 id='graduation_to_a_top_level_project'&gt;Graduation to a Top Level Project&lt;/h3&gt;
 
 &lt;p&gt;Second very important milestone for us this month was graduating from the Apache Incubator to a Top Level Project. This puts us on par with other Apache projects such as Apache Cassandra and Apache Subversion.&lt;/p&gt;
-&lt;div style='text-align: center;'&gt;&lt;a href='http://apache.org/' target='_blank'&gt;&lt;img src='/images/apache_logo.png' align='middle' style='border: none !important;' /&gt;&lt;/a&gt;&lt;/div&gt;&lt;br /&gt;
+&lt;div style='text-align: center;'&gt;&lt;a target='_blank' href='http://apache.org/'&gt;&lt;img src='/images/apache_logo.png' style='border: none !important;' align='middle' /&gt;&lt;/a&gt;&lt;/div&gt;&lt;br /&gt;
 &lt;p&gt;Graduation signifies that both the Apache Libcloud product and community have been well-governed under the Foundation&amp;#8217;s meritocratic, consensus-driven process and principles.&lt;/p&gt;
 
 &lt;p&gt;Graduating to a Top Level Project means that now we have a &lt;a href='http://www.apache.org/dev/pmc.html'&gt;Project Management Committee&lt;/a&gt; (PMC) which will overlook our operations and make sure everything is running smoothly.&lt;/p&gt;
@@ -489,7 +386,7 @@
 &lt;p&gt;Official graduation announcement / press release can be found on the Apache blog - &lt;a href='https://blogs.apache.org/foundation/entry/the_apache_software_foundation_announces12'&gt;The Apache Software Foundation Announces Apache Libcloud as a Top-Level Project&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h3 id='libcloud_at_europython_2011_in_florence_italy'&gt;Libcloud at EuroPython 2011 in Florence, Italy&lt;/h3&gt;
-&lt;div style='text-align: center;'&gt;&lt;a href='http://ep2011.europython.eu/' target='_blank'&gt;&lt;img src='/images/europython_logo.png' align='middle' style='border: none !important;' /&gt;&lt;/a&gt;&lt;/div&gt;&lt;br /&gt;
+&lt;div style='text-align: center;'&gt;&lt;a target='_blank' href='http://ep2011.europython.eu/'&gt;&lt;img src='/images/europython_logo.png' style='border: none !important;' align='middle' /&gt;&lt;/a&gt;&lt;/div&gt;&lt;br /&gt;
 &lt;p&gt;I will be at EuroPython in Italy next month where I will give an &lt;a href='http://ep2011.europython.eu/conference/talks/managing-the-cloud-with-libcloud'&gt;introductory talk about Libcloud&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;Beside giving a talk we will also host a development sprint there. This is a great opportunity for anyone who wants to contribute to the project or learn something new to join us. I will post more details about the sprint in the upcoming weeks on the &lt;a href='http://libcloud.apache.org/devinfo.html'&gt;libcloud mailing list&lt;/a&gt;.&lt;/p&gt;
@@ -505,7 +402,7 @@
 		<content type="html">&lt;h2 id='libcloud_monthly_update_april_2011__storage_api_loadbalancer_api_new_drivers'&gt;&lt;a href='/2011/04/26/libcloud-monthly-update-april-2011-storage-api-load-balancer-api-new-drivers.html'&gt;libcloud Monthly Update (April 2011) - Storage API, load-balancer API, new drivers&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;Another month is around and it is time for another libcloud monthly update post. I did not write one previous month, because I have written &amp;#8221;&lt;a href='/2011/03/18/pycon-us-2011-recap.html'&gt;PyCon US 2011 Recap&lt;/a&gt;&amp;#8221; post which also includes information about libcloud development which has happened during PyCon and in March.&lt;/p&gt;
-&lt;div style='text-align: center;'&gt;&lt;a href='http://incubator.apache.org/libcloud/' target='_blank'&gt;&lt;img src='/images/libcloud_logo.png' align='middle' style='border: none !important;' /&gt;&lt;/a&gt;&lt;/div&gt;&lt;br /&gt;
+&lt;div style='text-align: center;'&gt;&lt;a target='_blank' href='http://incubator.apache.org/libcloud/'&gt;&lt;img src='/images/libcloud_logo.png' style='border: none !important;' align='middle' /&gt;&lt;/a&gt;&lt;/div&gt;&lt;br /&gt;
 &lt;h3 id='what_has_been_accomplished_in_april_2011'&gt;What has been accomplished in April 2011&lt;/h3&gt;
 
 &lt;ul&gt;
@@ -601,144 +498,13 @@
 &lt;/ul&gt;
 
 &lt;p&gt;Because this function has changed in Django 1.3 I also had to create two separate versions - one for Django 1.2 and one for Django 1.3.&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='o'&gt;...&lt;/span&gt;
-&lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;setup_databases&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='o'&gt;**&lt;/span&gt;&lt;span class='n'&gt;kwargs&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
-  &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;VERSION&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt; &lt;span class='o'&gt;==&lt;/span&gt; &lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-    &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;VERSION&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt; &lt;span class='o'&gt;==&lt;/span&gt; &lt;span class='mi'&gt;2&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;VERSION&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='mi'&gt;2&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;&lt;/span&gt; &lt;span class='mi'&gt;4&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-      &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;setup_databases_12&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='o'&gt;**&lt;/span&gt;&lt;span class='n'&gt;kwargs&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-    &lt;span class='k'&gt;elif&lt;/span&gt; &lt;span class='n'&gt;VERSION&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='mi'&gt;2&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='mi'&gt;4&lt;/span&gt; &lt;span class='ow'&gt;or&lt;/span&gt; &lt;span class='n'&gt;VERSION&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt; &lt;span class='o'&gt;==&lt;/span&gt; &lt;span class='mi'&gt;3&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-      &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;setup_databases_13&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='o'&gt;**&lt;/span&gt;&lt;span class='n'&gt;kwargs&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
 
-  &lt;span class='k'&gt;raise&lt;/span&gt; &lt;span class='ne'&gt;Exception&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;Unsupported Django Version: &lt;/span&gt;&lt;span class='si'&gt;%s&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;&lt;/span&gt; &lt;span class='o'&gt;%&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;str&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;VERSION&lt;/span&gt;&lt;span class='p'&gt;)))&lt;/span&gt;
-
-&lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;setup_databases_12&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='o'&gt;**&lt;/span&gt;&lt;span class='n'&gt;kwargs&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
-  &lt;span class='c'&gt;# Taken from django.test.simple&lt;/span&gt;
-  &lt;span class='n'&gt;old_names&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;
-  &lt;span class='n'&gt;mirrors&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;
-
-  &lt;span class='n'&gt;worker_index&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;kwargs&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;worker_index&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='bp'&gt;None&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-  &lt;span class='k'&gt;for&lt;/span&gt; &lt;span class='n'&gt;alias&lt;/span&gt; &lt;span class='ow'&gt;in&lt;/span&gt; &lt;span class='n'&gt;connections&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-    &lt;span class='n'&gt;connection&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;connections&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;alias&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
-    &lt;span class='n'&gt;database_name&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;test_&lt;/span&gt;&lt;span class='si'&gt;%d&lt;/span&gt;&lt;span class='s'&gt;_&lt;/span&gt;&lt;span class='si'&gt;%s&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;&lt;/span&gt; &lt;span class='o'&gt;%&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;worker_index&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;connection&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;settings_dict&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;NAME&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;])&lt;/span&gt;
-    &lt;span class='n'&gt;connection&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;settings_dict&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;TEST_NAME&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;database_name&lt;/span&gt;
-    &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;connection&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;settings_dict&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;TEST_MIRROR&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;]:&lt;/span&gt;
-      &lt;span class='n'&gt;mirrors&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;append&lt;/span&gt;&lt;span class='p'&gt;((&lt;/span&gt;&lt;span class='n'&gt;alias&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;connection&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
-      &lt;span class='n'&gt;mirror_alias&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;connection&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;settings_dict&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;TEST_MIRROR&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
-      &lt;span class='n'&gt;connections&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;_connections&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;alias&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;connections&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;mirror_alias&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
-    &lt;span class='k'&gt;else&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-      &lt;span class='n'&gt;old_names&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;append&lt;/span&gt;&lt;span class='p'&gt;((&lt;/span&gt;&lt;span class='n'&gt;connection&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;connection&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;settings_dict&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;NAME&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;]))&lt;/span&gt;
-      &lt;span class='n'&gt;connection&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;creation&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;create_test_db&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;verbosity&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;autoclobber&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='ow'&gt;not&lt;/span&gt; &lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;interactive&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-  &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;old_names&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;mirrors&lt;/span&gt;
-
-&lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;setup_databases_13&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='o'&gt;**&lt;/span&gt;&lt;span class='n'&gt;kwargs&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
-  &lt;span class='c'&gt;# Taken from django.test.simple&lt;/span&gt;
-  &lt;span class='kn'&gt;from&lt;/span&gt; &lt;span class='nn'&gt;django.test.simple&lt;/span&gt; &lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='n'&gt;dependency_ordered&lt;/span&gt;
-
-  &lt;span class='n'&gt;mirrored_aliases&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='p'&gt;{}&lt;/span&gt;
-  &lt;span class='n'&gt;test_databases&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='p'&gt;{}&lt;/span&gt;
-  &lt;span class='n'&gt;dependencies&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='p'&gt;{}&lt;/span&gt;
-
-  &lt;span class='n'&gt;worker_index&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;kwargs&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;worker_index&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='bp'&gt;None&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-  &lt;span class='k'&gt;for&lt;/span&gt; &lt;span class='n'&gt;alias&lt;/span&gt; &lt;span class='ow'&gt;in&lt;/span&gt; &lt;span class='n'&gt;connections&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-    &lt;span class='n'&gt;connection&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;connections&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;alias&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
-    &lt;span class='n'&gt;database_name&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;test_&lt;/span&gt;&lt;span class='si'&gt;%d&lt;/span&gt;&lt;span class='s'&gt;_&lt;/span&gt;&lt;span class='si'&gt;%s&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;&lt;/span&gt; &lt;span class='o'&gt;%&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;worker_index&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;connection&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;settings_dict&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;NAME&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;])&lt;/span&gt;
-    &lt;span class='n'&gt;connection&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;settings_dict&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;TEST_NAME&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;database_name&lt;/span&gt;
-
-    &lt;span class='n'&gt;item&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;test_databases&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;setdefault&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;
-        &lt;span class='n'&gt;connection&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;creation&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;test_db_signature&lt;/span&gt;&lt;span class='p'&gt;(),&lt;/span&gt;
-        &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;connection&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;settings_dict&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;NAME&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;],&lt;/span&gt; &lt;span class='p'&gt;[])&lt;/span&gt;
-    &lt;span class='p'&gt;)&lt;/span&gt;
-    &lt;span class='n'&gt;item&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;append&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;alias&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-    &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;alias&lt;/span&gt; &lt;span class='o'&gt;!=&lt;/span&gt; &lt;span class='n'&gt;DEFAULT_DB_ALIAS&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-      &lt;span class='n'&gt;dependencies&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;alias&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;connection&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;settings_dict&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;TEST_DEPENDENCIES&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;DEFAULT_DB_ALIAS&lt;/span&gt;&lt;span class='p'&gt;])&lt;/span&gt;
-
-  &lt;span class='n'&gt;old_names&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;
-  &lt;span class='n'&gt;mirrors&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;
-  &lt;span class='k'&gt;for&lt;/span&gt; &lt;span class='n'&gt;signature&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;db_name&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;aliases&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='ow'&gt;in&lt;/span&gt; &lt;span class='n'&gt;dependency_ordered&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;test_databases&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;items&lt;/span&gt;&lt;span class='p'&gt;(),&lt;/span&gt; &lt;span class='n'&gt;dependencies&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
-      &lt;span class='n'&gt;connection&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;connections&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;aliases&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;]]&lt;/span&gt;
-      &lt;span class='n'&gt;old_names&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;append&lt;/span&gt;&lt;span class='p'&gt;((&lt;/span&gt;&lt;span class='n'&gt;connection&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;db_name&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='bp'&gt;True&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
-      &lt;span class='n'&gt;test_db_name&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;connection&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;creation&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;create_test_db&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;verbosity&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;autoclobber&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='ow'&gt;not&lt;/span&gt; &lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;interactive&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-      &lt;span class='k'&gt;for&lt;/span&gt; &lt;span class='n'&gt;alias&lt;/span&gt; &lt;span class='ow'&gt;in&lt;/span&gt; &lt;span class='n'&gt;aliases&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;:]:&lt;/span&gt;
-          &lt;span class='n'&gt;connection&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;connections&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;alias&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
-          &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;db_name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-            &lt;span class='n'&gt;old_names&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;append&lt;/span&gt;&lt;span class='p'&gt;((&lt;/span&gt;&lt;span class='n'&gt;connection&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;db_name&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='bp'&gt;False&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
-            &lt;span class='n'&gt;connection&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;settings_dict&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;NAME&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;test_db_name&lt;/span&gt;
-          &lt;span class='k'&gt;else&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
-            &lt;span class='n'&gt;old_names&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;append&lt;/span&gt;&lt;span class='p'&gt;((&lt;/span&gt;&lt;span class='n'&gt;connection&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;db_name&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='bp'&gt;True&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
-            &lt;span class='n'&gt;connection&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;creation&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;create_test_db&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;verbosity&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;autoclobber&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='ow'&gt;not&lt;/span&gt; &lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;interactive&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-
-  &lt;span class='k'&gt;for&lt;/span&gt; &lt;span class='n'&gt;alias&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;mirror_alias&lt;/span&gt; &lt;span class='ow'&gt;in&lt;/span&gt; &lt;span class='n'&gt;mirrored_aliases&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;items&lt;/span&gt;&lt;span class='p'&gt;():&lt;/span&gt;
-    &lt;span class='n'&gt;mirrors&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;append&lt;/span&gt;&lt;span class='p'&gt;((&lt;/span&gt;&lt;span class='n'&gt;alias&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;connections&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;alias&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;settings_dict&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;NAME&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;]))&lt;/span&gt;
-    &lt;span class='n'&gt;connections&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;alias&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;settings_dict&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;NAME&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;connections&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;mirror_alias&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;settings_dict&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;NAME&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
-
-  &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;old_names&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;mirrors&lt;/span&gt;
-&lt;span class='o'&gt;...&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
 &lt;p&gt;I have also used a very similar approach for the Twisted parallel test runner.&lt;/p&gt;
 
 &lt;p&gt;As a first thing, I have created a special base class which works similar as the Django &lt;code&gt;TestCase&lt;/code&gt; class - it disables database transactions in &lt;code&gt;setUp()&lt;/code&gt; and does a database roll-back in the &lt;code&gt;tearDown()&lt;/code&gt; method (database rollback is a lot faster than re-creating all the tables).&lt;/p&gt;
 
 &lt;p&gt;For the Twisted runner to buffer the test output, I had to modify the trial &lt;code&gt;_makeRunner&lt;/code&gt; function and pass it in a custom stream object.&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='k'&gt;class&lt;/span&gt; &lt;span class='nc'&gt;BufferWritesDevice&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;object&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
 
-  &lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;__init__&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
-    &lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;_data&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;
-
-  &lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;write&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;string&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
-    &lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;_data&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;append&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;string&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-
-  &lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;read&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
-    &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;join&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;_data&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-
-  &lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;flush&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='n'&gt;args&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='o'&gt;**&lt;/span&gt;&lt;span class='n'&gt;kwargs&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
-    &lt;span class='k'&gt;pass&lt;/span&gt;
-
-  &lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;isatty&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
-    &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='bp'&gt;False&lt;/span&gt;
-
-&lt;span class='o'&gt;....&lt;/span&gt;
-
-&lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;_tests_func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;tests&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;worker_index&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
-  &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='ow'&gt;not&lt;/span&gt; &lt;span class='nb'&gt;isinstance&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;tests&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;list&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nb'&gt;set&lt;/span&gt;&lt;span class='p'&gt;)):&lt;/span&gt;
-    &lt;span class='n'&gt;tests&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[&lt;/span&gt; &lt;span class='n'&gt;tests&lt;/span&gt; &lt;span class='p'&gt;]&lt;/span&gt;
-
-  &lt;span class='n'&gt;args&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;-e&amp;#39;&lt;/span&gt; &lt;span class='p'&gt;]&lt;/span&gt;
-  &lt;span class='n'&gt;args&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;extend&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;tests&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-
-  &lt;span class='n'&gt;config&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;Options&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;
-  &lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;parseOptions&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;args&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-
-  &lt;span class='n'&gt;stream&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;BufferWritesDevice&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;
-  &lt;span class='n'&gt;runner&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;_make_runner&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;stream&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;stream&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-  &lt;span class='n'&gt;suite&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;_getSuite&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-  &lt;span class='n'&gt;result&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;setup_test_db&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;worker_index&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='bp'&gt;None&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;runner&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;run&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;suite&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-  &lt;span class='n'&gt;result&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;TestResult&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;from_trial_result&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;result&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-  &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;result&lt;/span&gt;
-
-&lt;span class='o'&gt;...&lt;/span&gt;
-
-&lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;_make_runner&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='bp'&gt;self&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;stream&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
-  &lt;span class='c'&gt;# Based on twisted.scripts.trial._makeRunner&lt;/span&gt;
-  &lt;span class='n'&gt;mode&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='bp'&gt;None&lt;/span&gt;
-  &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;debug&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;]:&lt;/span&gt;
-      &lt;span class='n'&gt;mode&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;TrialRunner&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;DEBUG&lt;/span&gt;
-  &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;dry-run&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;]:&lt;/span&gt;
-      &lt;span class='n'&gt;mode&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;TrialRunner&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;DRY_RUN&lt;/span&gt;
-  &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;TrialRunner&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;reporter&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;],&lt;/span&gt;
-                            &lt;span class='n'&gt;mode&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;mode&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-                            &lt;span class='n'&gt;stream&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;stream&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-                            &lt;span class='n'&gt;profile&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;profile&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;],&lt;/span&gt;
-                            &lt;span class='n'&gt;logfile&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;logfile&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;],&lt;/span&gt;
-                            &lt;span class='n'&gt;tracebackFormat&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;tbformat&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;],&lt;/span&gt;
-                            &lt;span class='n'&gt;realTimeErrors&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;rterrors&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;],&lt;/span&gt;
-                            &lt;span class='n'&gt;uncleanWarnings&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;unclean-warnings&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;],&lt;/span&gt;
-                            &lt;span class='n'&gt;workingDirectory&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;temp-directory&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;],&lt;/span&gt;
-                            &lt;span class='n'&gt;forceGarbageCollection&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;force-gc&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;])&lt;/span&gt;
-
-&lt;span class='o'&gt;...&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
 &lt;p&gt;To make each worker use a separate database I also had to manually manipulate the connection &lt;code&gt;settings_dict&lt;/code&gt; dictionary and adjust the value for the &lt;code&gt;TEST_NAME&lt;/code&gt; item (I prepend worker index to each test database name).&lt;/p&gt;
 
 &lt;p&gt;There are still a lot of possible improvements left and some of them are already on my road-map.&lt;/p&gt;
