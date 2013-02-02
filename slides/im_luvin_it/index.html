@@ -45,6 +45,7 @@
         <h1>
           I'm Luvin It
         </h1>
+        <p>Introduction to Luvit and Virgo project</p>
         <p>
           Tomaz Muraus
           <br/ >
@@ -71,8 +72,8 @@
           <li>Tomaz Muraus, <a href="https://twitter.com/KamiSLO">@KamiSLO</a>,
           <a href="https://plus.google.com/106838062648597435631/posts">+Tomaz Muraus</a></li>
           <li>Github: <a href="https://github.com/Kami">github.com/Kami</a><li>
-          <li>Engineer at Rackspace</li>
-          <li>Libcloud Project chair & committer</li>
+          <li>Engineer at Rackspace (Cloud Monitoring, Service Registry)</li>
+          <li>Apache Libcloud Project chair & committer</li>
           <li>Dude who likes open standards and open source</li>
         </ul>
       </article>
@@ -203,14 +204,50 @@
       </article>
 
       <article>
-      <h3>Virgo</h3>
-        TODO: c-core + luvit + sigar layers image
+      <h3>Virgo - communication with the endpoint(s)</h3>
+        <br />
+        <br />
+        <img class="centered" src="images/agent_endpoint_communication.png"
+        style="width: 98%"/>
       </article>
 
       <article>
-      <h3>Virgo</h3>
-        TODO: agent connected to the endpoints image
+      <h3>Virgo - protocol example (request)</h3>
+        <pre class="brush: javascript">
+        {
+          "v": "1",
+          "id": 0,
+          "source": "agentA",
+          "target": "endpoint",
+          "method": "heartbeat.post",
+          "params": {
+            "timestamp": 1325645515246
+          }
+        }
+        </pre>
       </article>
+
+      <article>
+      <h3>Virgo - protocol example (response)</h3>
+        <pre class="brush: javascript">
+        {
+          "v": "1",
+          "id": 1,
+          "source": "endpoint",
+          "target": "agentA",
+          "result": {
+            "timestamp": 1325645515246
+          }
+        }
+        </pre>
+      </article>
+
+      <article>
+      <h3>Virgo - layers</h3>
+        <br />
+        <br />
+        <img class="centered" src="images/agent_layers.png" />
+        </article>
 
       <article>
         <h3>Virgo - Memory Usage</h3>

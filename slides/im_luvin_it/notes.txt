@@ -58,6 +58,11 @@ Why we picked Luvit?
  - C-core for bootstraping, main business logic in lua
  - didn't use luvit
  - didn't use JIT
+- C core
+ - Configuration file parsing
+ - Option parsing
+ - Logging
+ - Lua bootstrap
 - Main business logic in Lua makes it easier to implement auto updates
   which don't require full process to be restarted
 - We don't envision C core to be updated a lot (exception: security issues,
@@ -80,7 +85,19 @@ Virgo
    - Statically linking stuff makes it harder
    - IIRC still some low hanging fruit (OpenSSL flags, etc.)
  - Secure
+   - Some other agents default to http (aewww)
  - Cross-platform / portable
+
+Virgo - endpoint
+
+- Talks to endpoint over TLS
+- Peristent connection
+- One "primary" endpoint
+- Keeps connection open to every AEP (still send heartbeats, etc. to other
+  endpoints)
+- New line delimited JSON with some "standard" fields (open protocol)
+  - Simple request / response format
+  - Show example single message example
 
 Thanks
 
