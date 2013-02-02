@@ -1,0 +1,93 @@
+Agenda
+
+What is Luvit?
+
+- It's a framework for building network applications built on top of Lua,
+  livUV and LuaJIT
+  - Lua - language as you know it
+  - libuv - event loop and networking layer used by Node.js
+  - LuaJIT - JIT compiler for Lua
+- Supports TCP, UDP and HTTP
+- It's fast
+ - Supposedly
+ - There are some benchmarks on the net' which shows it's faster than Node.js,
+   but not sure if this is still accurate
+ - We don't care that much about speed, mostly about low memory footprint
+
+Luvit - HTTP Server Example
+
+- Not much to see here
+- Pretty similar to Node.js
+- Just a quick example to get you excited
+
+Luvit History
+
+- Originally developed by Tim Caswell
+ - Wanted to test uv + luajit with lua
+ - He has a new pet project now (his own language)
+- Young project
+  - Same problem as other young projects:
+    - unstable
+    - not a single well known way of doing something
+    - no package manager
+    - setting build infrastructure (buildbots, etc.)
+    - not a lot of tooling
+    - not a lot of docs / tutorials
+    - ...
+    - it's a trade off!
+
+Why should I care?
+
+- Lua is cool
+ - Originally developed by a some academic dudes from a Brazilian university iirc
+ - Mostly (co-rutines, etc.)
+ - Some of the same problems as JavaScript (e.g. Number type)
+ - Other issues - 1 based indexing
+ - Used as a scripting language of choice in many games and other software (WoW,
+   etc.)
+- It could be a great tool for some set of problems
+
+- LuaJIT is cool
+  - JIT - just in time compiler - traces the code, compiles hot code paths to
+    the machine code
+ - At the moment it's the worlds fastest tracing JIT (take that v8!)
+
+Why we picked Luvit?
+
+- Previous experience with Lua from the Cloudkick agent
+ - C-core for bootstraping, main business logic in lua
+ - didn't use luvit
+ - didn't use JIT
+- Main business logic in Lua makes it easier to implement auto updates
+  which don't require full process to be restarted
+- We don't envision C core to be updated a lot (exception: security issues,
+  etc.)
+- Lua is easy to embedd
+  - Easy C API
+ - Simple stack (push & pop) based API
+- Cross-platform supprt
+ - well libuv was a decent start
+ - Thanks Brandon, Ryan, Paul, etc.!
+
+Virgo
+
+- Platform for building hosts agents (le big goal)
+- Initial implementation = Rackspace Cloud Monitoring Agent
+- Collects metrics and system information and sends it to the endpoint
+- A lot of ideas and space for other features (remote command execution, etc.)
+- Our goals
+  - Low memory footprint
+   - Statically linking stuff makes it harder
+   - IIRC still some low hanging fruit (OpenSSL flags, etc.)
+ - Secure
+ - Cross-platform / portable
+
+Thanks
+
+- Thanks
+- Hope I got you excited and if you have a similar problem you will consider
+  using Luvit (and / or Virgo)
+- As mentioned previously, project is OSS so contributions of any kind are
+  always welcome
+- P.S.: Shameless plug for my employer - if this kind of problems interest you
+  go to rackertalent.com/sanfrancisco or email me

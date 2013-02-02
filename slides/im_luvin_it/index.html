@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<!--
+  Google HTML5 slide template
+
+  Authors: Luke Mahé (code)
+           Marcin Wichary (code and design)
+
+           Dominic Mazzoni (browser compatibility)
+           Charles Chen (ChromeVox support)
+
+  URL: http://code.google.com/p/html5slides/
+-->
+<ul>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+<html>
+  <head>
+    <title>I'm Luvin It | FOSDEM 2013, Brussels, Belgium</title>
+
+    <meta charset='utf-8'>
+    <script src='./slides.js'></script>
+
+    <script src="./syntaxhighlighter/scripts/shCore.js" type="text/javascript"></script>
+    <script src="./syntaxhighlighter/scripts/shBrushJScript.js" type="text/javascript"></script>
+    <script src="./syntaxhighlighter/scripts/shBrushCpp.js" type="text/javascript"></script>
+
+    <link href="./syntaxhighlighter/styles/shCore.css" rel="stylesheet" type="text/css" />
+    <link href="./syntaxhighlighter/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
+  </head>
+
+  <style>
+  </style>
+  <body style='display: none'>
+  <script type="text/javascript">
+       SyntaxHighlighter.all()
+  </script>
+
+    <section class='slides layout-regular template-rax'>
+      <article class="cover">
+          <img class='centered' style='height: 250px; margin-top:40px; margin-bottom: -140px;' src='images/luvit-logo.png'>
+        <h1>
+          I'm Luvin It
+        </h1>
+        <p>
+          Tomaz Muraus
+          <br/ >
+          tomaz@tomaz.me
+          <br/ >
+          FOSDEM 2013, Brussels, Belgium
+        </p>
+        </article>
+
+      <article>
+      <h3>Agenda</h3>
+        <ul>
+          <li>What is Luvit?</li>
+          <li>Luvit History</li>
+          <li>Why Should I Care?</li>
+          <li>Virgo</li>
+          <li>Questions</li>
+        </ul>
+      </article>
+
+      <article>
+      <h3>Who am I?</h3>
+        <ul>
+          <li>Tomaz Muraus, <a href="https://twitter.com/KamiSLO">@KamiSLO</a>,
+          <a href="https://plus.google.com/106838062648597435631/posts">+Tomaz Muraus</a></li>
+          <li>Github: <a href="https://github.com/Kami">github.com/Kami</a><li>
+          <li>Engineer at Rackspace</li>
+          <li>Libcloud Project chair & committer</li>
+          <li>Dude who likes open standards and open source</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>What is Luvit?</h3>
+        <ul>
+          <li>Framework for building network applications</li>
+          <li>L - Lua</li>
+          <li>uv - libuv</li>
+          <li>it - LuaJIT</li>
+          <li>Apache 2.0 licensed</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>Luvit - HTTP Server Example</h3>
+        <pre class="brush: javascript">
+          local http = require('http')
+
+          http.createServer(function (req, res)
+            local body = 'Hello FOSDEM\n'
+            res:writeHead(200, {
+              ['Content-Type'] = 'text/plain',
+              ['Content-Length'] = #body
+            })
+            res:finish(body)
+          end):listen(8080)
+
+          print('Server listening at http://localhost:8080/')
+        </pre>
+      </article>
+
+      <article>
+        <h3>Luvit History</h3>
+        <ul>
+          <li>Originally developed by Tim Caswell</li>
+          <li>First version released in September 2011 (young project)</li>
+          <li>A lot of contributions by Rackers (Ryan Philips, Brandon Philips)</li>
+          <li>Current stable version is 0.6.0</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>Why Should I Care?</h3>
+        <ul>
+          <li>Lua is cool</li>
+            <ul>
+              <li>Mostly (some of the same issues as JavaScript)</li>
+              <li>Used as a scripting / secondary language in many apps and
+              games
+                <ul>
+                  <li>World of Warcraft</li>
+                  <li>awesome am</li>
+                </ul>
+                </li>
+              <li>Easy to embed</li>
+            </ul>
+            <li>LuaJIT is even more cool</li>
+            <ul>
+              <li>JIT compiler</li>
+              <li>Other popular JIT compiler: v8, pypy jit, tracemonkey, ...</li>
+            </ul>
+        </ul>
+      </article>
+
+      <article>
+        <h3>Why We Picked Luvit?</h3>
+        <ul>
+          <li>Easy to embed</li>
+          <li>Faster development cycle</li>
+          <li>Easier to update</li>
+          <li>Low memory footprint</li>
+          <li>Previous experience with Lua from the Cloudkick agent</li>
+        </ul>
+      </article>
+
+      <article>
+      <h3>Lua C stack based API</h3>
+        <pre class="brush: c">
+          #include <stdio.h>
+          #include <stdlib.h>
+          #include <lua.h>
+          #include <lauxlib.h>
+
+          int main()
+          {
+              lua_State *L = luaL_newstate();
+              if (luaL_dostring(L, "function foo (x,y) return x+y end")) exit(1);
+              lua_getglobal(L, "foo");
+              lua_pushinteger(L, 5);
+              lua_pushinteger(L, 3);
+              lua_call(L, 2, 1);
+              printf("Result: %d\n", lua_tointeger(L, -1));
+              lua_close(L);
+              return 0;
+          }
+        </pre>
+      </article>
+
+      <article>
+        <h3>Virgo</h3>
+        <ul>
+          <li>Platform for building host agents</li>
+          <li>Initial implementation - Rackspace Monitoring agent</li>
+            <ul>
+              <li>Runs on a server and collects metrics</li>
+              <li>Sends collected metrics and data to the agent endpoint over TCP (TLS)</li>
+              <li>We use sigar for metrics collection / system information</li>
+              <li>Low memory footprint</li>
+              <li>Runs on Linux and Windows</li>
+              <li>Statically link all the things</li>
+            </ul>
+        </ul>
+        </article>
+
+        <article>
+        <h3>Virgo - Goals</h3>
+        <ul>
+          <li>Low (memory) footprint</li>
+          <li>Secure</li>
+            <ul>
+              <li>Communication only over HTTPS</li>
+              <li>Signed bundles</li>
+              <li>Signed binaries (also Windows specific stuff)</li>
+            </ul>
+        </ul>
+      </article>
+
+      <article>
+      <h3>Virgo</h3>
+        TODO: c-core + luvit + sigar layers image
+      </article>
+
+      <article>
+      <h3>Virgo</h3>
+        TODO: agent connected to the endpoints image
+      </article>
+
+      <article>
+        <h3>Virgo - Memory Usage</h3>
+        <img class="centered" src="images/agents_memory_usage.png" />
+      </article>
+
+      <article>
+        <h3>Thanks</h3>
+        <ul>
+          <li>http://luvit.io</li>
+          <li>http://github.com/luvit/luvit</li>
+          <li>http://github.com/racker/virgo</li>
+          <li>http://rackertalent.com/sanfrancisco/</li>
+        <ul>
+      </article>
+   </section>
+  </body>
+</html>
