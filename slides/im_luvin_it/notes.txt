@@ -22,7 +22,7 @@ Luvit - HTTP Server Example
 
 Luvit History
 
-- Originally developed by Tim Caswell
+- Originally developed by Tim Caswell (github.com/creationix/)
  - Wanted to test uv + luajit with lua
  - He has a new pet project now (his own language)
 - Young project
@@ -40,7 +40,9 @@ Why should I care?
 
 - Lua is cool
  - Originally developed by a some academic dudes from a Brazilian university iirc
- - Mostly (co-rutines, etc.)
+ - Mostly (corutines, etc.)
+ - No anonymous functions
+ - We don't actually use corutines, we use callbacks (mostly used from Node)
  - Some of the same problems as JavaScript (e.g. Number type)
  - Other issues - 1 based indexing
  - Used as a scripting language of choice in many games and other software (WoW,
@@ -51,6 +53,25 @@ Why should I care?
   - JIT - just in time compiler - traces the code, compiles hot code paths to
     the machine code
  - At the moment it's the worlds fastest tracing JIT (take that v8!)
+
+Virgo
+
+- Platform for building hosts agents (le big goal)
+- Host agent = long running process which does something on the host system
+- Initial implementation = Rackspace Cloud Monitoring Agent
+- Collects metrics and system information and sends it to the endpoint
+- A lot of ideas and space for other features (remote command execution, etc.)
+
+Virgo - Goals
+
+- Low memory footprint
+ - Statically linking stuff makes it harder
+ - IIRC still some low hanging fruit (OpenSSL flags, etc.)
+- Cross platform / portability
+- Secure
+ - Some other agents default to http (aewww)
+ - Bundle signing
+ - Binary signing
 
 Why we picked Luvit?
 
@@ -74,21 +95,8 @@ Why we picked Luvit?
  - well libuv was a decent start
  - Thanks Brandon, Ryan, Paul, etc.!
 
-Virgo
 
-- Platform for building hosts agents (le big goal)
-- Initial implementation = Rackspace Cloud Monitoring Agent
-- Collects metrics and system information and sends it to the endpoint
-- A lot of ideas and space for other features (remote command execution, etc.)
-- Our goals
-  - Low memory footprint
-   - Statically linking stuff makes it harder
-   - IIRC still some low hanging fruit (OpenSSL flags, etc.)
- - Secure
-   - Some other agents default to http (aewww)
- - Cross-platform / portable
-
-Virgo - endpoint
+Virgo - communication with the endpoint(s)
 
 - Talks to endpoint over TLS
 - Peristent connection
@@ -99,6 +107,10 @@ Virgo - endpoint
   - Simple request / response format
   - Show example single message example
 
+Virgo - Memory Usage
+
+- Quick comparision of different agents
+
 Thanks
 
 - Thanks
@@ -106,5 +118,8 @@ Thanks
   using Luvit (and / or Virgo)
 - As mentioned previously, project is OSS so contributions of any kind are
   always welcome
+- I constrained myself mostly to Luvit and I didn't tell a lot about our
+  monitoring and agent endpoint infrastructure, but if you are interested, let
+  me know
 - P.S.: Shameless plug for my employer - if this kind of problems interest you
   go to rackertalent.com/sanfrancisco or email me
