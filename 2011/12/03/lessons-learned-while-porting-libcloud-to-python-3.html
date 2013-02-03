@@ -90,7 +90,9 @@ pageTracker._trackPageview();
 <h3 id='urlparse'>urlparse</h3>
 
 <p>Functionality from <code>urlparse</code> has been moved to <code>urllib.parse</code>. We only use two functions from this module (quote and urlencode) so simple aliased import did the trick:</p>
-
+<div class='highlight'><pre><code class='python'><span class='kn'>from</span> <span class='nn'>urllib.parse</span> <span class='kn'>import</span> <span class='n'>quote</span> <span class='k'>as</span> <span class='n'>urlquote</span>
+<span class='kn'>from</span> <span class='nn'>urllib.parse</span> <span class='kn'>import</span> <span class='n'>urlencode</span> <span class='k'>as</span> <span class='n'>urlencode</span>
+</code></pre></div>
 <h3 id='xmlrpclib'>xmlrpclib</h3>
 
 <p><code>xmlrpclib</code> has been moved to <code>xmlrpc.client</code>. Simple aliased import also solved this problem - <code>import xmlrpc.client as xmlrpclib</code>.</p>
@@ -102,19 +104,38 @@ pageTracker._trackPageview();
 <h2 id='2__type_and_filelike_objects'>2. <code>file</code> type and file-like objects</h2>
 
 <p><code>file</code> type has been removed in Python 3. To resolve this problem, I have used code similar to the one bellow in the places where we use <code>file</code> type.</p>
+<div class='highlight'><pre><code class='python'><span class='k'>if</span> <span class='n'>PY3</span><span class='p'>:</span>
+    <span class='kn'>from</span> <span class='nn'>io</span> <span class='kn'>import</span> <span class='n'>FileIO</span> <span class='k'>as</span> <span class='nb'>file</span>
 
+<span class='k'>class</span> <span class='nc'>MyFileLikeObject</span><span class='p'>(</span><span class='nb'>file</span><span class='p'>):</span>
+    <span class='o'>...</span>
+</code></pre></div>
 <h2 id='3_generators_and__method'>3. Generators and <code>.next()</code> method.</h2>
 
 <p>For consistency with other magic methods, <code>next</code> method in Python 3 has been renamed to <code>__next__</code>. To make it work with all the versions, I have used built-in <code>next</code> function in Python &gt;= 3 and object <code>.next()</code> method in older versions.</p>
-
+<div class='highlight'><pre><code class='python'><span class='k'>if</span> <span class='n'>sys</span><span class='o'>.</span><span class='n'>version_info</span> <span class='o'>&gt;=</span> <span class='p'>(</span><span class='mi'>3</span><span class='p'>,</span> <span class='mi'>0</span><span class='p'>):</span>
+    <span class='nb'>next</span> <span class='o'>=</span> <span class='n'>__builtins__</span><span class='p'>[</span><span class='s'>&#39;next&#39;</span><span class='p'>]</span>
+<span class='k'>else</span><span class='p'>:</span>
+    <span class='k'>def</span> <span class='nf'>next</span><span class='p'>(</span><span class='n'>i</span><span class='p'>):</span>
+        <span class='k'>return</span> <span class='n'>i</span><span class='o'>.</span><span class='n'>next</span><span class='p'>()</span>
+</code></pre></div>
 <h2 id='4_exception_handling'>4. Exception handling</h2>
 
 <p>Sadly, there is no unified way to handle exceptions and extract the exception object in Python 2.5 and Python 3.x. This means I needed to use a hacky <code>sys.exc_info()[1]</code> approach to extract the raised exception</p>
 
 <p>Old code:</p>
-
+<div class='highlight'><pre><code class='python'><span class='k'>try</span><span class='p'>:</span>
+    <span class='n'>foo</span>
+<span class='k'>except</span> <span class='ne'>Exception</span><span class='p'>,</span> <span class='n'>e</span><span class='p'>:</span>
+    <span class='k'>print</span> <span class='n'>e</span>
+</code></pre></div>
 <p>New code:</p>
-
+<div class='highlight'><pre><code class='python'><span class='k'>try</span><span class='p'>:</span>
+    <span class='n'>foo</span>
+<span class='k'>except</span> <span class='ne'>Exception</span><span class='p'>:</span>
+    <span class='n'>e</span> <span class='o'>=</span> <span class='n'>sys</span><span class='o'>.</span><span class='n'>exc_info</span><span class='p'>()[</span><span class='mi'>1</span><span class='p'>]</span>
+    <span class='k'>print</span> <span class='n'>e</span>
+</code></pre></div>
 <p>One of the PyPy developers has <a href='http://www.reddit.com/r/Python/comments/mxufx/django_python_3_port_all_tests_now_pass_on_272/'>posted on reddit</a> that this approach is very slow in PyPy. Luckily, besides the tests, there aren&#8217;t many places in our code where we need access to the exception object so this should be a good compromise for now.</p>
 
 <h2 id='5_filter_map_dictkeys'>5. filter, map, dict.keys()</h2>
@@ -128,13 +149,21 @@ pageTracker._trackPageview();
 <h2 id='7__and_encoding'>7. <code>xml.etree.ElementTree.tostring</code> and encoding</h2>
 
 <p>In Python 3 this method returns <a href='http://hg.python.org/cpython/rev/57e631f088d7/'>bytes by default</a>. To preserve the old behavior and get a string back, I have used a code similar to one bellow:</p>
+<div class='highlight'><pre><code class='python'><span class='k'>if</span> <span class='n'>PY3</span><span class='p'>:</span>
+    <span class='n'>encoding</span> <span class='o'>=</span> <span class='s'>&#39;unicode&#39;</span>
+<span class='k'>else</span><span class='p'>:</span>
+    <span class='n'>encoding</span> <span class='o'>=</span> <span class='bp'>None</span>
 
+<span class='n'>data</span> <span class='o'>=</span> <span class='n'>tostring</span><span class='p'>(</span><span class='n'>root</span><span class='p'>,</span> <span class='n'>encoding</span><span class='o'>=</span><span class='n'>encoding</span><span class='p'>)</span>
+</code></pre></div>
 <h2 id='8_encodehex'>8. encode(&#8216;hex&#8217;)</h2>
 
 <p>We had multiple places in the code where we did something like this:</p>
-
+<div class='highlight'><pre><code class='python'><span class='n'>value</span> <span class='o'>=</span> <span class='n'>os</span><span class='o'>.</span><span class='n'>urandom</span><span class='p'>(</span><span class='mi'>8</span><span class='p'>)</span><span class='o'>.</span><span class='n'>encode</span><span class='p'>(</span><span class='s'>&#39;hex&#39;</span><span class='p'>)</span>
+</code></pre></div>
 <p>Hex encoding has been removed from Python 3. I have preserved backward compatibility by using <code>binascii</code> module:</p>
-
+<div class='highlight'><pre><code class='python'><span class='n'>value</span> <span class='o'>=</span> <span class='n'>binascii</span><span class='o'>.</span><span class='n'>hexlify</span><span class='p'>(</span><span class='n'>os</span><span class='o'>.</span><span class='n'>urandom</span><span class='p'>(</span><span class='mi'>8</span><span class='p'>))</span>
+</code></pre></div>
 <h2 id='9_octal_numbers'>9. Octal numbers</h2>
 
 <p>In Python 3 there is a special backward-incompatible (and strange) syntax for octal numbers - e.g. <code>0o755</code>. We only use octal number in one place and this has been easily resolved by using <code>int</code> to convert a string to a number with base 8 - <code>int(&#39;755&#39;, 8)</code>.</p>
