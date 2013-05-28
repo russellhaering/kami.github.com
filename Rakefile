@@ -1,5 +1,6 @@
 desc "Watch the site and regenerate when it changes"
 task :watch do
+  Dir.chdir '_source'
   puts "Starting to watch source with Jekyll."
   jekyllPid = Process.spawn("jekyll server --watch")
 
