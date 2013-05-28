@@ -1,0 +1,27 @@
+- Who am I
+- What is CI
+- What is CD
+- Why do we need it
+  - Humans are error prone
+  - Automate all the things
+  - Smaller incremental changes = smaller risk
+  - faster time to detection
+  - break fast
+  - Faster time to release and recovery
+- Goals
+- loosely defined
+- Old approach (SaaS changed this)
+ - Box software
+- CD in practice - Cloud Monitoring
+ - What is CM
+ - Short 3000 feet architecture overview
+ - CI in Cloud Monitoring
+- CD in practice - Service Registry
+ - What is RSR
+ - Short 3000foot architecture overview
+ - CI in RSR
+- Q&A
+
+Images
+
+- http://www.flickr.com/photos/veo/4487247749/

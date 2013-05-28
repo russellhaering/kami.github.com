@@ -1,0 +1,83 @@
+Rackspace?
+
+- For anyone not knowing who Rackspace is
+- HQ in Texas, I work for SF office
+- Started with managed and dedicated hosting
+- Our moto is fanatical support
+- If someone asks me what is the biggest difference if you compare it to Amazon
+  I would say fanatical support and service.
+- In the past couple of years we have also been drinking the cloud kool-aid
+- In 2010 Rackspace founded OpenStack with Nasa (swift + nova)
+- OpenStack is an open Apache 2.0 licensed platform for building your own cloud
+
+Why I selected this topic?
+
+- There are many other interesting topics I could talk about, but there are two
+  reasons why I have selected this one:
+
+  - Not many companies around here are aware of advantages of this approach or
+    are using it.
+  - If I look back and think which thing had the biggest impact on the industry in the last
+    couple of years I think "Continous Deployment" is one of those things and
+    the other one probably is "DevOps".
+
+- I also think more general topics like this are more useful, have bigger
+  impact and more widely applicable than topics about some specific tool
+  or framework (e.g. how to efficiently store time series data in Cassandra).
+
+Who is using it?
+
+- Pretty much all of the "new-area" companies do it
+- If you Google around you can find a lot of good posts from most of the
+  companies mentioned on the slide (Etsy, Netflix, Github, Twitter)
+- Etsy is interesting because they kinda pioneered click to deploy with
+  deployinators
+- Keep in mind that there are a lot of variantions and different level of
+  automation
+
+Continuous Deployment in Practice
+
+- Yay, now lets get our hands dirty
+- I will show two real life examples of continous deployment in action
+- I worked on both producs
+- I think they are interesting because they have different requirements and one
+  of them runs on bare metal and other one runs on cloud.
+- As usual, there is also a disclamer at the bottom. Just because we do
+  something this way this doesn't neccessray mean you need to do it exactly the
+  same for your products because you might have different needs and / or
+  requirements. You can start simple, automate small things, etc.
+
+In Closing:
+
+- You can use iterative approach and start smal. You don't need to go
+  from 0 automated stuff to everything automation. Do it in small steps automate
+  one thing then another and eventually most of the things will be automated.
+  Hm this iterative thing sounds familar, almost like agile :P Oh damn, I said I
+  need to slap myself every time I say agile.
+
+It's not that I don't like agile, I think it's great it's just that every time
+you give some approach / whatever a name people start creating cults and stuff
+around it and sell it like it's the best thing on earth and only possible
+option.
+
+In general I prefer to avoid any kind od extremism in cases like this and say do
+what works best for you and use a right tool for the job.
+
+Rackspace Service Registry - Deployment process
+
+- API server is temporary disabled in the load balancer (it's drained) which
+  caused load to shift to other active API servers
+- Compared to Cloud Monitoring this is a bit easier, because Cloud Load Balancer
+  has a better API than Apache mod_proxy
+- Max capacity is calculated for 4 API servers, but we actually have 5 API servers
+  because during deploy 1 is temporary taken offline and this reduces the capacity.
+
+Possible Questions
+
+Why doesn't CM use cloud?
+
+- Special needs
+- Gear deployed in multiple regions when cloud wasn't available yet
+- CBS wasn't available when we started
+- SSL is expensive, need beefy machines or special SSL terminators
+- We could go hybrid in the future

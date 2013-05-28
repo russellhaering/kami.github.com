@@ -1,0 +1,790 @@
+<!--
+Google IO 2012 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Continuous Deployment | Do kolen v blatu, Februar 2013</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" media="all" href="theme/css/default.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+  <slide class="title-slide segue nobackground">
+    <aside class="gdbar"><img src="images/rax-logo-small.png"></section></aside>
+    <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Who am I?</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>Tomaz Muraus</li>
+        <li>Engineer @ Rackspace</li>
+        <li>Cloud Monitoring</li>
+        <li>Service Registry</li>
+        <li>Apache Libcloud Project chair & committer</li>
+        <li>Dude who likes open standards and open source</li>
+        <li>Dude who likes to automate "all the things"</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Agenda</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>Rackspace?</li>
+        <li>Why I selected this topic?</li>
+        <li>Traditional approach to delivering software</li>
+        <li>What is Continuous Deployment?</li>
+        <li>What is CI/CD/CD</li>
+        <li>Benefits of Continuous Deployment</li>
+        <li>Who Uses Continuous Deployment</li>
+        <li>Tools for Continuous Deployment</li>
+        <li>Continuous Deployment in practice</li>
+        <li>Q&A</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Rackspace?</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>Founded in 1998</li>
+        <li>Started with traditional and managed hosting</li>
+        <li>Fanatical support (focus on service and support)</li>
+        <li>Managed hosting is still big and important</li>
+        <li>Cloud is the future</li>
+        <li>Founded OpenStack with Nasa</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Why I selected this topic?</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>A lot of other interesting topics (distributed systems, Cassandra, functional programming, devops, etc.)</li>
+        <li>Not a lot of companies around here are aware of advantages or practice CD</li>
+        <li>More widely applicable</li>
+        <li>Biggest impact</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide class="segue red nobackground">
+    <article>
+      <hgroup>
+        <h2>Continuous Deployment</h2>
+      </hgroup>
+
+      <aside class="note">
+        <section>
+          <p>Anyone who read the meetup page might have noticed I changed the
+          title from "delivery" to "deployment". I changed it to "deployment"
+          because deployment is a subset of delivery and I always want to focus
+          on some of the new stuff in the deployment world which has became
+          popular with SaaS.</p>
+          <p>In any case, before we dive into some examples lets have a look at some
+          theory.</p>
+        </section>
+      </aside>
+    </article>
+  </slide>
+
+  <slide>
+    <aside class="note">
+      <section>
+        <ul>
+          <li>You used to deliver software on a disk in a box</li>
+          <li>Longer iterations and release cycles</li>
+          <li>Not flexible</li>
+          <li>Tests usually only ran before building a release / binary</li>
+          <li>SaaS changed this a bit (you can still apply most practices from
+          CI/CD to classical software though)</li>
+          <li>In traditional sense deliverying code usually means shipping a
+          binary / installer to a user</li>
+        </ul>
+      </section>
+    </aside>
+
+    <hgroup>
+      <h2>Traditional approach to delivering software</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <p><img src="images/software_in_a_box.jpg" class="centered" /></p>
+    </article>
+  </slide>
+
+  <slide>
+    <aside class="note">
+      <section>
+        <ul>
+          <li>You used to deliver software on a disk in a box</li>
+          <li>Longer iterations and release cycles</li>
+          <li>Not flexible</li>
+          <li>Tests usually only ran before building a release / binary</li>
+          <li>Usually not automated - single person who creates a release</li>
+          <li>SaaS changed this a bit</li>
+        </ul>
+      </section>
+    </aside>
+
+    <hgroup>
+      <h2>Traditional approach to delivering software</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>Disk in a box</li>
+        <li>Longer iterations and release cycles</li>
+        <li>Tests usually only ran before creating a release</li>
+        <li>Usually not automated - single person who creates a release</li>
+        <li>SaaS changed this and made some things easier</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <aside class="note">
+      <section>
+        <p>Keep in mind that I have defined those terms very loosely. It's nice
+        to know the differences but there is a lot of overlap and boundaries are
+        pretty close. I think it's better to know the goals and benefits you get
+        from using those 3 practices than knowing all the minor differences and boundaries
+        in theory.
+        </p>
+      </section>
+    </aside>
+
+    <hgroup>
+      <h2>What is Continuous Integration</h2>
+    </hgroup>
+
+    <article class="bigger">
+        <ul>
+          <li>Practice of merging work into main branch constantly so you
+          can verify and test changes and that those changes work with other
+          changes</li>
+          <li>Build automation</li>
+          <li>Automatic testing</li>
+          <li>Every change should be built</li>
+          <li>Test in a production-like environment</li>
+        </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>What is Continuous Delivery</h2>
+    </hgroup>
+
+    <article class="bigger">
+        <ul>
+          <li>Delivering of the code to an environment once a developer feels
+          the code is ready</li>
+        </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>What is Continuous Deployment</h2>
+    </hgroup>
+
+    <article class="bigger">
+        <ul>
+          <li>Deployment of release code to production as soon as it's ready</li>
+          <li>Should be automated (press the big green button!)</li>
+          <li>Should be repeatable</li>
+          <li>Everyone should be able to do it in a short time frame</li>
+          <li>You should be able to deploy mainline at any time</li>
+          <li>Requires Continuous Integration and Continuous Delivery</li>
+        </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Benefits of Continuous Deployment</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>Lower risk (smaller, incremental changes)</li>
+        <li>Faster time to detection and recovery</li>
+        <li>Roll new features and bug fixes out to customers faster</li>
+        <li>Minimal manual overhead (less stress for developers)</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Who uses Continuous Deployment</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <img src="images/cd_companies_logos.png" class="centered" />
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Who uses Continuous Deployment</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>Fabric (Python)</li>
+        <li>Capistrano (Ruby)</li>
+        <li>Deployinator</li>
+        <li>Dreadnot</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide class="segue red nobackground">
+    <article>
+      <hgroup>
+        <h2>Continuous Deployment in<br /><br /> Practice</h2>
+      </hgroup>
+
+      <aside class="note">
+        <section>
+          <ul>
+            <li>Yeah, enough theory, lets get our hands dirty!</li>
+            <li>Real life examples from two different Rackspace producs out of San Francisco office</li>
+          </ul>
+        </section>
+      </aside>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Continuous Deployment in Practice</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>Lets get our hands dirty!</li>
+        <li>Real life examples from two Rackspace products
+          <ul>
+            <li>Cloud Monitoring (cross dc / multi region, bare metal)</li>
+            <li>Service Registry (single dc, cloud only)</li>
+          </ul>
+        </li>
+        <li>Your Mileage May Vary</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide class="segue red nobackground">
+    <article>
+      <hgroup>
+        <h2>Rackspace Cloud Monitoring</h2>
+      </hgroup>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>What is Rackspace Cloud Monitoring</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>Fully distributed monitoring system</li>
+        <li>Highly available (we are ready for zombie apocalypse)</li>
+        <li>Powerful alarm language</li>
+        <li>Eventually consistent</li>
+        <li>Remote checks (ping, http, smtp, ssh, ...)</li>
+        <li>Agent checks (cpu, load, memory, write your own, ...)</li>
+        <li>Historical data and metrics collection</li>
+        <li>No official UI yet</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <aside class="note">
+      <section>
+        <ul>
+          <li>Example of our alarm language which allows you to define thresholds</li>
+          <li>Simple example, actual alarms can be more complex</li>
+          <li>A lot of place for improvements (aggregates, etc.)</li>
+        </ul>
+      </section>
+    </aside>
+
+    <hgroup>
+      <h2>What is Rackspace Cloud Monitoring</h2>
+    </hgroup>
+
+    <article class="smaller">
+      <pre class="prettyprint" data-lang="javascript">
+:set consecutiveCount=2
+:set consistency=QUORUM
+
+if (metric['listening'] == 'yes') {
+  return new AlarmStatus(OK, 'Service listening on the specified port');
+}
+
+return new AlarmStatus(CRITICAL, 'Service is not listening on the specified port');
+     </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <aside class="note">
+      <section>
+        <ul>
+          <li>Screenshot of W.I.P. integration with Rackspace Control Panel</li>
+          <li>Different team inside Rackspace works on the UI</li>
+          <li>We don't provide official UI for displaying historical data yet</li>
+        </ul>
+      </section>
+    </aside>
+
+    <hgroup>
+      <h2>What is Rackspace Cloud Monitoring</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <img src="images/reach_agent_view.png" class="centered" />
+    </article>
+  </slide>
+
+  <slide>
+    <aside class="note">
+      <section>
+        <ul>
+          <li>Per CAP theorem you can only have two, we opted in for A and P
+          because that's usually the sanest choise for a monitoring system</li>
+          <li>Not in all cases though - to make API easier to use we opt for C
+          when adding / removing / updating a check (instant feedback, no
+          pooling)</li>
+          <li></li>
+          <li>Most of the components scale horizontally</li>
+          <li>Shard / partition based on the account group (each account is assigned to a group)</li>
+        </ul>
+      </section>
+    </aside>
+
+    <hgroup>
+      <h2>Rackspace Cloud Monitoring - Goals</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>Easy to use REST based API</li>
+        <li>Flexible API aka monitoring anything which has an IPv[4|6]</li>
+        <li>Making it really reliable
+          <ul>
+            <li>Two alerts are (usually) better than no alerts (A & P over C)</li>
+            <li>No SPOF</li>
+          </ul>
+        </li>
+        <li>Horizontally scalable to many hundreds of servers per account</li>
+        <li>Easy to operate and maintain</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <aside class="note">
+      <section>
+        <ul>
+          <li>API servers - Node.js behind Apache LB</li>
+          <li>Pollers - noit (open source project), crazy C</li>
+          <li>Cassandra - primary data store for everything</li>
+          <li>Two clusters - account meta data and metrics (different access
+          patterns and requirements)</li>
+          <li>Alerting engine - Java thing which evaluates alarms on the
+          incoming stream of metrics</li>
+          <li>Messengers - Node.js service which sends alerts (email, webhook)</li>
+        </ul>
+      </section>
+    </aside>
+
+    <hgroup>
+      <h2>Rackspace Cloud Monitoring - Architecture</h2>
+    </hgroup>
+
+    <article class="smaller">
+      <img src="images/cm_architecture.png" class="centered" />
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Rackspace Cloud Monitoring - Deployment Goals</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li><b>Zero downtime</b></li>
+        <li><b>Zero customer impact</b> (maintaince windows FTL)</li>
+        <li>Deployment should be fast, not a lot of manual overhead</li>
+        <li>Deploying should be easy (click the green button!)</li>
+        <li>Everyone should be able to do it at any point in time</li>
+        <li>Developers should be initivied to deploy as often as possible</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Rackspace Cloud Monitoring - Deployment Goals</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>Fail fast</li>
+        <li>Always roll forward (code needs to be designed this way)
+          <ul>
+            <li>Code needs to be designed this way</li>
+            <li>Usually simpler (think schema changes, etc.)</li>
+            <li>Small changes make it possible</li>
+          </ul>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Rackspace Cloud Monitoring - Deployment process</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>Trigger build on Buildbot</li>
+        <li>Set up PagerDuty override</li>
+        <li>Disable Nagios alerts</li>
+        <li>Modify LB rules to redirect traffic to other regions</li>
+        <li>Deploy API servers</li>
+        <li>Setup CQL schema (run schema migrations)</li>
+        <li>Deploy backend servers</li>
+        <li>Verify API version</li>
+        <li>Verify API functionality</li>
+        <li>Restore LB rules</li>
+        <li>Enable Nagios</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Rackspace Cloud Monitoring - Deployment process</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <img src="images/cm_creadnot.png" class="centered" />
+    </article>
+    </slide>
+
+  <slide>
+    <aside class="note">
+      <section>
+        <ul>
+          <li>Slightly out of date (from April 2012)</li>
+          <li>One off thing done with matplotlib (too lazy to VPN in and do it
+          again)</li>
+        </ul>
+      </section>
+    </aside>
+
+    <hgroup>
+      <h2>Rackspace Cloud Monitoring - Deployment stats</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <img src="images/deployments_per_day_of_the_week.png" class="centered" />
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Rackspace Cloud Monitoring - Deployment stats</h2>
+    </hgroup>
+
+  <article class="bigger">
+      <img src="images/deployments_per_hour_of_a_day.png" class="centered" />
+    </article>
+  </slide>
+
+  <slide class="segue red nobackground">
+    <article>
+      <hgroup>
+        <h2>Rackspace Service Registry</h2>
+      </hgroup>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>What is Rackspace Service Registry</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>REST API based product for keeping track of your services</li>
+        <li>Middle tier load-balancing</li>
+        <li>Events feed for automation</li>
+        <li>Configuration storage with change notifications</li>
+        <li>Currently in preview (free, go play with it)</li>
+        <li>http://rax.io.rsr</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>What is Rackspace Service Registry</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <img src="images/rsr_integration.png" class="centered" />
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>What is Rackspace Service Registry</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <img src="images/rsr_events_feed.png" class="centered" />
+    </article>
+  </slide>
+
+  <slide>
+    <aside class="note">
+      <section>
+        <ul>
+        </ul>
+      </section>
+    </aside>
+
+    <hgroup>
+      <h2>Rackspace Service Registry - Architecture</h2>
+    </hgroup>
+
+    <article class="smaller">
+      <img src="images/rsr_architecture.png" class="centered" />
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Rackspace Service Registry - Livin' the Cloud dreams</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>Cloud Servers</li>
+        <li>Cloud Files</li>
+        <li>Cloud Monitoring</li>
+        <li>Cloud Load Balancers</li>
+        <li>Mailgun</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>What is Rackspace Service Registry</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>REST API based product for keeping track of your services</li>
+        <li>Middle tier load-balancing</li>
+        <li>Events feed for automation</li>
+        <li>Configuration storage with change notifications</li>
+        <li>Currently in preview (free, go play with it)</li>
+        <li>http://rax.io.rsr</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Rackspace Service Registry - Deployment process</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>Trigger build on Buildbot
+          <ul>
+            <li>Runs tests</li>
+            <li>Builds documentation</li>
+            <li>Builds a release artifact (tarball with source code)</li>
+          </ul>
+        </li>
+        <li>Remove API server n from load-balancer rotation</li>
+        <li>Deploy API server
+          <ul>
+            <li>Download the release artifact (code) from Cloud Files</li>
+            <li>Unpack the artifact</li>
+            <li>Run chef-solo</li>
+          </ul>
+        </li>
+        <li>Verify API version</li>
+        <li>Verify API functionality</li>
+        <li>Add API server n back to rotation</li>
+        <li>Repeat for every API server</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Rackspace Service Registry - Deployment process</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <p>Deployment demo video</p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Possible Feature Improvements</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>Fully automated rollback
+          <ul>
+            <li>Hard especially when schema changes are involved</li>
+            <li>Not worth the effort atm</li>
+          </ul>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>In closing</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>Decreases risk</li>
+        <li>Get new features and fixes out to customers faster</li>
+        <li>Automation reducess stress and burden put on developers</li>
+        <li>Developers can focus on things which actually provide value to
+        business and customers</li>
+        <li>You can start small and use iterative approach (automate small
+        things, etc.)</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide class="logoslide nobackground">
+    <article class="flexbox vcenter">
+      <span><img src="images/rax-sfo-logo.png"></span>
+    </article>
+  </slide>
+
+  <slide>
+    <aside class="note">
+      <section>
+        <ul>
+          <li>Looking for new rackers!</li>
+          <li>Remote / part-time also a possibility</li>
+          <li>A lot of challenging problems (distributed systems, systems
+          programming, etc.)</li>
+          <li>Fun work environment</li>
+          <li>We love open source (contribute back, encourage ppl to contribute,
+          etc.)</li>
+          <li>You can apply using the link above or just send me an email</li>
+          <li>rackertalent page application thing used to be awful but I think
+          it got better</li>
+          <li>Oh, and I have some CM, RSR and Libcloud stickers and sad cloud
+          t-shirts!</li>
+        </ul>
+      </section>
+    </aside>
+
+    <hgroup>
+      <h2>We are hiring!</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <img src="images/nerf_fight.jpg" class="centered" /><br />
+      <ul>
+        <li>http://rackertalent.com/sanfrancisco</li>
+        <li>tomaz.muraus@rackspace.com</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Rackspace Drinkup</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <p>Location: Corner pub</p>
+      <p>Come and talk about what we do</p>
+      <p>Drinks are on us</p>
+    </article>
+  </slide>
+
+  <slide class="thank-you-slide segue nobackground">
+    <aside class="gdbar right"><img src="images/rax-logo-small.png"></section></aside>
+    <article class="flexbox vleft auto-fadein">
+      <h2>Thank You!</h2>
+      <p>http://rackertalent.com/sanfrancisco</p>
+    </article>
+    <p class="auto-fadein" data-config-contact>
+      <!-- populated from slide_config.json -->
+    </p>
+  </slide>
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>
