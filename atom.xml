@@ -5,7 +5,7 @@
 	<link href="http://www.tomaz.me" rel="self" />
 	<link href="http://www.tomaz.me" />
 	<id>http://www.tomaz.me</id>
-	<updated>2013-02-03T07:34:28+01:00</updated>
+	<updated>2013-05-27T17:39:27-07:00</updated>
 	<author>
 		<name>Tomaz Muraus</name>
 		<email>tomaz@tomaz.me</email>
@@ -16,7 +16,7 @@
 		<title>Hosting APT repository on Rackspace CloudFiles</title>
         <link href="http://www.tomaz.me/2012/07/22/hosting-apt-repository-on-rackspace-cloud-files.html" />
         <id>http://www.tomaz.me/2012/07/22/hosting-apt-repository-on-rackspace-cloud-files.html</id>
-		<updated>2012-07-22T00:00:00+02:00</updated>
+		<updated>2012-07-22T00:00:00-07:00</updated>
 		<content type="html">&lt;h2 id='hosting_apt_repository_on_rackspace_cloudfiles'&gt;&lt;a href='/2012/07/22/hosting-apt-repository-on-rackspace-cloud-files.html'&gt;Hosting APT repository on Rackspace CloudFiles&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;In this post I will describe how to host APT repository on &lt;a href='http://www.rackspace.com/cloud/cloud_hosting_products/files/'&gt;Rackspace Cloud Files&lt;/a&gt;.&lt;/p&gt;
@@ -111,7 +111,7 @@
 		<title>Libcloud Update (April 2012) - 0.8.0, 0.9.1, GSoC</title>
         <link href="http://www.tomaz.me/2012/04/28/libcloud-monthly-update-april-2012-0-8-0-0-9-1-gsoc.html" />
         <id>http://www.tomaz.me/2012/04/28/libcloud-monthly-update-april-2012-0-8-0-0-9-1-gsoc.html</id>
-		<updated>2012-04-28T00:00:00+02:00</updated>
+		<updated>2012-04-28T00:00:00-07:00</updated>
 		<content type="html">&lt;h2 id='libcloud_update_april_2012__080_091_gsoc'&gt;&lt;a href='/2012/04/28/libcloud-monthly-update-april-2012-0-8-0-0-9-1-gsoc.html'&gt;Libcloud Update (April 2012) - 0.8.0, 0.9.1, GSoC&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;Welcome to Libcloud April 2012 update post. Sorry for skipping a couple of months, but I have been pretty busy again. In any case, here is a short but sweet April update.&lt;/p&gt;
@@ -139,7 +139,7 @@
 		<title>Libcloud Monthly Update (December 2011) - 0.6.1, 0.6.2, 0.7.1, Python 3</title>
         <link href="http://www.tomaz.me/2011/12/07/libcloud-montly-update-december-2011.html" />
         <id>http://www.tomaz.me/2011/12/07/libcloud-montly-update-december-2011.html</id>
-		<updated>2011-12-07T00:00:00+01:00</updated>
+		<updated>2011-12-07T00:00:00-08:00</updated>
 		<content type="html">&lt;h2 id='libcloud_monthly_update_december_2011__061_062_071_python_3'&gt;&lt;a href='/2011/12/07/libcloud-montly-update-december-2011.html'&gt;Libcloud Monthly Update (December 2011) - 0.6.1, 0.6.2, 0.7.1, Python 3&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;Past few months have been pretty busy here and you may have noticed that I didn&amp;#8217;t post a monthly update post in the last two months. This doesn&amp;#8217;t mean nothing has been going on though! In fact, quite the contrary. Last few months have been very busy and we have shipped two new releases and a voting thread for a new 0.7.1 release was just started a few days ago. More about that bellow.&lt;/p&gt;
@@ -169,7 +169,7 @@
 		<title>Lessons learned while porting Libcloud to Python 3</title>
         <link href="http://www.tomaz.me/2011/12/03/lessons-learned-while-porting-libcloud-to-python-3.html" />
         <id>http://www.tomaz.me/2011/12/03/lessons-learned-while-porting-libcloud-to-python-3.html</id>
-		<updated>2011-12-03T00:00:00+01:00</updated>
+		<updated>2011-12-03T00:00:00-08:00</updated>
 		<content type="html">&lt;h2 id='lessons_learned_while_porting_libcloud_to_python_3'&gt;&lt;a href='/2011/12/03/lessons-learned-while-porting-libcloud-to-python-3.html'&gt;Lessons learned while porting Libcloud to Python 3&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;Yesterday after seeing and being inspired by the &lt;a href='http://news.ycombinator.com/item?id=3305021'&gt;Django Python 3 port&lt;/a&gt; news, I have decided it&amp;#8217;s finally time to port &lt;a href='http://libcloud.apache.org/'&gt;Libcloud&lt;/a&gt; to Python 3. There have already been some talks about doing that in the past, but nobody actually managed to make a lot of progress.&lt;/p&gt;
@@ -294,7 +294,7 @@
 		<title>Whiskey Node.js test runner now with more goodness - introducing process runner</title>
         <link href="http://www.tomaz.me/2011/11/27/whiskey-now-with-more-goodness-introducing-process-runner.html" />
         <id>http://www.tomaz.me/2011/11/27/whiskey-now-with-more-goodness-introducing-process-runner.html</id>
-		<updated>2011-11-27T00:00:00+01:00</updated>
+		<updated>2011-11-27T00:00:00-08:00</updated>
 		<content type="html">&lt;p&gt;First a short-introduction for people who aren&amp;#8217;t familiar with Whiskey.&lt;/p&gt;
 
 &lt;p&gt;&lt;a href='https://github.com/cloudkick/whiskey'&gt;Whiskey&lt;/a&gt; is a powerful test runner for Node.js applications. It supports async testing, code coverage, scope leaks reporting, Makefile generation, test timing and lot more. Be sure to check out the &lt;a href='https://github.com/cloudkick/whiskey'&gt;github page&lt;/a&gt; which lists all the features.&lt;/p&gt;
@@ -332,7 +332,7 @@
 		<title>libcloud Monthly Update (September 2011) - FLOSS weekly, OpenStack driver improvements, DNS API</title>
         <link href="http://www.tomaz.me/2011/09/24/libcloud-monthly-update-september-floss-weekly-openstack-improvements-dns-api.html" />
         <id>http://www.tomaz.me/2011/09/24/libcloud-monthly-update-september-floss-weekly-openstack-improvements-dns-api.html</id>
-		<updated>2011-09-24T00:00:00+02:00</updated>
+		<updated>2011-09-24T00:00:00-07:00</updated>
 		<content type="html">&lt;h2 id='libcloud_monthly_update_september_2011__floss_weekly_openstack_driver_improvements_dns_api'&gt;&lt;a href='/2011/09/24/libcloud-monthly-update-september-floss-weekly-openstack-improvements-dns-api.html'&gt;libcloud Monthly Update (September 2011) - FLOSS weekly, OpenStack driver improvements, DNS API&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;Without further ado here is a Libcloud monthly update for September 2011.&lt;/p&gt;
@@ -374,7 +374,7 @@
 		<title>libcloud Monthly Update (August 2011) - 0.5.2 release, EuroPython 2011 recap, FLOSS weekly</title>
         <link href="http://www.tomaz.me/2011/08/24/libcloud-monthly-update-august.html" />
         <id>http://www.tomaz.me/2011/08/24/libcloud-monthly-update-august.html</id>
-		<updated>2011-08-24T00:00:00+02:00</updated>
+		<updated>2011-08-24T00:00:00-07:00</updated>
 		<content type="html">&lt;h2 id='libcloud_monthly_update_august_2011__052_release_europython_2011_recap_floss_weekly'&gt;&lt;a href='/2011/08/24/libcloud-monthly-update-august.html'&gt;libcloud Monthly Update (August 2011) - 0.5.2 release, EuroPython 2011 recap, FLOSS weekly&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;As you might have noticed, I didn&amp;#8217;t write a monthly update post in the last two months. The reason for that is that I have been busy with work and finishing my thesis for a bachelor degree.&lt;/p&gt;
@@ -414,13 +414,13 @@
 		<title>libcloud Monthly Update (May 2011) - 0.5.0 Release, Graduation, EuroPython</title>
         <link href="http://www.tomaz.me/2011/05/26/libcloud-monthly-update-may.html" />
         <id>http://www.tomaz.me/2011/05/26/libcloud-monthly-update-may.html</id>
-		<updated>2011-05-26T00:00:00+02:00</updated>
+		<updated>2011-05-26T00:00:00-07:00</updated>
 		<content type="html">&lt;h2 id='libcloud_monthly_update_may_2011__050_release_graduation_europython'&gt;&lt;a href='/2011/05/26/libcloud-monthly-update-may.html'&gt;libcloud Monthly Update (May 2011) - 0.5.0 Release, Graduation, EuroPython&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;May has been a very busy and important month for us. We have finally manged to finalize and release a long awaited version 0.5.0.&lt;/p&gt;
 
 &lt;p&gt;Part of the reason that we have finally managed to release 0.5.0 this month was that me and &lt;a href='http://paul.querna.org/'&gt;Paul Querna&lt;/a&gt; were present at the Apache Retreat in Ireland where we have spent some time hacking on Libcloud and polishing the last few features which were missing for the release.&lt;/p&gt;
-&lt;div style='text-align: center;'&gt;&lt;a target='_blank' href='http://libcloud.apache.org'&gt;&lt;img style='border: none !important;' align='middle' src='/images/libcloud_logo.png' /&gt;&lt;/a&gt;&lt;/div&gt;&lt;br /&gt;
+&lt;div style='text-align: center;'&gt;&lt;a href='http://libcloud.apache.org' target='_blank'&gt;&lt;img align='middle' src='/images/libcloud_logo.png' style='border: none !important;' /&gt;&lt;/a&gt;&lt;/div&gt;&lt;br /&gt;
 &lt;p&gt;Overall, Libcloud 0.5.0 is a big step forward and represents a big milestone for the project. It includes many new features, improvements and new compute drivers.&lt;/p&gt;
 
 &lt;h3 id='major_changes_in_libcloud_050'&gt;Major changes in Libcloud 0.5.0&lt;/h3&gt;
@@ -460,7 +460,7 @@
 &lt;h3 id='graduation_to_a_top_level_project'&gt;Graduation to a Top Level Project&lt;/h3&gt;
 
 &lt;p&gt;Second very important milestone for us this month was graduating from the Apache Incubator to a Top Level Project. This puts us on par with other Apache projects such as Apache Cassandra and Apache Subversion.&lt;/p&gt;
-&lt;div style='text-align: center;'&gt;&lt;a target='_blank' href='http://apache.org/'&gt;&lt;img style='border: none !important;' align='middle' src='/images/apache_logo.png' /&gt;&lt;/a&gt;&lt;/div&gt;&lt;br /&gt;
+&lt;div style='text-align: center;'&gt;&lt;a href='http://apache.org/' target='_blank'&gt;&lt;img align='middle' src='/images/apache_logo.png' style='border: none !important;' /&gt;&lt;/a&gt;&lt;/div&gt;&lt;br /&gt;
 &lt;p&gt;Graduation signifies that both the Apache Libcloud product and community have been well-governed under the Foundation&amp;#8217;s meritocratic, consensus-driven process and principles.&lt;/p&gt;
 
 &lt;p&gt;Graduating to a Top Level Project means that now we have a &lt;a href='http://www.apache.org/dev/pmc.html'&gt;Project Management Committee&lt;/a&gt; (PMC) which will overlook our operations and make sure everything is running smoothly.&lt;/p&gt;
@@ -472,7 +472,7 @@
 &lt;p&gt;Official graduation announcement / press release can be found on the Apache blog - &lt;a href='https://blogs.apache.org/foundation/entry/the_apache_software_foundation_announces12'&gt;The Apache Software Foundation Announces Apache Libcloud as a Top-Level Project&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h3 id='libcloud_at_europython_2011_in_florence_italy'&gt;Libcloud at EuroPython 2011 in Florence, Italy&lt;/h3&gt;
-&lt;div style='text-align: center;'&gt;&lt;a target='_blank' href='http://ep2011.europython.eu/'&gt;&lt;img style='border: none !important;' align='middle' src='/images/europython_logo.png' /&gt;&lt;/a&gt;&lt;/div&gt;&lt;br /&gt;
+&lt;div style='text-align: center;'&gt;&lt;a href='http://ep2011.europython.eu/' target='_blank'&gt;&lt;img align='middle' src='/images/europython_logo.png' style='border: none !important;' /&gt;&lt;/a&gt;&lt;/div&gt;&lt;br /&gt;
 &lt;p&gt;I will be at EuroPython in Italy next month where I will give an &lt;a href='http://ep2011.europython.eu/conference/talks/managing-the-cloud-with-libcloud'&gt;introductory talk about Libcloud&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;Beside giving a talk we will also host a development sprint there. This is a great opportunity for anyone who wants to contribute to the project or learn something new to join us. I will post more details about the sprint in the upcoming weeks on the &lt;a href='http://libcloud.apache.org/devinfo.html'&gt;libcloud mailing list&lt;/a&gt;.&lt;/p&gt;
@@ -484,11 +484,11 @@
 		<title>libcloud Monthly Update (April 2011) - Storage API, load-balancer API, new drivers</title>
         <link href="http://www.tomaz.me/2011/04/26/libcloud-monthly-update-april-2011-storage-api-load-balancer-api-new-drivers.html" />
         <id>http://www.tomaz.me/2011/04/26/libcloud-monthly-update-april-2011-storage-api-load-balancer-api-new-drivers.html</id>
-		<updated>2011-04-26T00:00:00+02:00</updated>
+		<updated>2011-04-26T00:00:00-07:00</updated>
 		<content type="html">&lt;h2 id='libcloud_monthly_update_april_2011__storage_api_loadbalancer_api_new_drivers'&gt;&lt;a href='/2011/04/26/libcloud-monthly-update-april-2011-storage-api-load-balancer-api-new-drivers.html'&gt;libcloud Monthly Update (April 2011) - Storage API, load-balancer API, new drivers&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;Another month is around and it is time for another libcloud monthly update post. I did not write one previous month, because I have written &amp;#8221;&lt;a href='/2011/03/18/pycon-us-2011-recap.html'&gt;PyCon US 2011 Recap&lt;/a&gt;&amp;#8221; post which also includes information about libcloud development which has happened during PyCon and in March.&lt;/p&gt;
-&lt;div style='text-align: center;'&gt;&lt;a target='_blank' href='http://incubator.apache.org/libcloud/'&gt;&lt;img style='border: none !important;' align='middle' src='/images/libcloud_logo.png' /&gt;&lt;/a&gt;&lt;/div&gt;&lt;br /&gt;
+&lt;div style='text-align: center;'&gt;&lt;a href='http://incubator.apache.org/libcloud/' target='_blank'&gt;&lt;img align='middle' src='/images/libcloud_logo.png' style='border: none !important;' /&gt;&lt;/a&gt;&lt;/div&gt;&lt;br /&gt;
 &lt;h3 id='what_has_been_accomplished_in_april_2011'&gt;What has been accomplished in April 2011&lt;/h3&gt;
 
 &lt;ul&gt;
@@ -534,7 +534,7 @@
 		<title>Making Django and Twisted tests faster</title>
         <link href="http://www.tomaz.me/2011/04/03/making-django-and-twisted-tests-faster.html" />
         <id>http://www.tomaz.me/2011/04/03/making-django-and-twisted-tests-faster.html</id>
-		<updated>2011-04-03T00:00:00+02:00</updated>
+		<updated>2011-04-03T00:00:00-07:00</updated>
 		<content type="html">&lt;h2 id='making_django_and_twisted_tests_faster'&gt;&lt;a href='/2011/04/03/making-django-and-twisted-tests-faster.html'&gt;Making Django and Twisted tests faster&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;As we all know writing tests is not particularly fun and having a test suite which takes a long time to complete makes everything even less enjoyable.&lt;/p&gt;
