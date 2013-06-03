@@ -1,0 +1,422 @@
+<!--
+Google IO 2012 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Service Registry | SFO Technical Conference, June 2013</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" media="all" href="theme/css/default.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+
+  <script src="./syntaxhighlighter/scripts/shCore.js" type="text/javascript"></script>
+  <script src="./syntaxhighlighter/scripts/shBrushJScript.js" type="text/javascript"></script>
+  <script src="./syntaxhighlighter/scripts/shBrushCpp.js" type="text/javascript"></script>
+
+  <link href="./syntaxhighlighter/styles/shCore.css" rel="stylesheet" type="text/css" />
+  <link href="./syntaxhighlighter/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
+  <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+</head>
+<body style="opacity: 0">
+  <script type="text/javascript">
+     SyntaxHighlighter.all()
+  </script>
+
+<slides class="layout-widescreen">
+  <slide class="title-slide segue nobackground">
+    <aside class="gdbar"><img src="images/rax-logo-small.png"></section></aside>
+    <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Who am I?</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>Tomaz Muraus</li>
+        <li>Cloudkick</li>
+        <li>Cloud Monitoring</li>
+        <li>Service Registry</li>
+        <li>Stuff</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Agenda</h2>
+    </hgroup>
+
+    <article class="bigger">
+      <ul>
+        <li>What is Service Registry?
+        </li>
+        <li>Heartbeating in Service Registry (diving deeper)
+          <ul>
+            <li>Cassandra 101 (sstables, tombstones, range queries)</li>
+            <li>How heartbeating works?</li>
+            <li>How we use Cassandra</li>
+          </ul>
+        </li>
+        <li>Q&A</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide class="segue red nobackground">
+    <article>
+      <hgroup>
+        <h2>Service Registry</h2>
+      </hgroup>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>What is Service Registry?</h2>
+    </hgroup>
+    <article class="bigger">
+      <p><img src="images/rsr_logo.png" class="centered" /></p>
+      <p>Service Registry is an API driven cloud service which allows you to
+      keep track of your services and store configuration values in a
+      centralized place and get notified when a value changes.</p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>What is Service Registry?</h2>
+    </hgroup>
+    <article class="bigger">
+      <ul>
+        <li>Three main groups of functionality</li>
+        <li>Service Discovery</li>
+        <li>Configuration Storage</li>
+        <li>Platform for automation</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Service Discovery</h2>
+    </hgroup>
+    <article class="bigger">
+      <p><img src="images/service_discovery.png" class="centered" /></p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Configuration Storage</h2>
+    </hgroup>
+    <article class="bigger">
+      <p><img src="images/configuration_namespaces_tree_visualization.png" class="centered" /></p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Platform for automation</h2>
+    </hgroup>
+    <article class="bigger">
+      <pre class="brush:javascript">
+{
+    "values": [
+        {
+            "type": "service.join",
+            "payload": {
+                "id": "dfw1-db1",
+                "heartbeat_timeout": 3,
+                "tags": [
+                    "mysql"
+                ],
+                "metadata": {
+                    "region": "dfw",
+                    "port": "3306",
+                    "ip": "127.0.0.1",
+                    "version": "5.5.24-0ubuntu0.12.04.1 (Ubuntu)"
+                }
+            }
+        },
+        {
+            "type": "configuration_value.update",
+            "payload": {
+                "old_value": null,
+                "new_value": "10.0.0.5",
+                "configuration_value_id": "/production/cassandra/listen_ip"
+            }
+        }
+    ]
+}
+      </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>What is Service Registry?</h2>
+    </hgroup>
+    <article class="bigger">
+      <ul>
+        <li>Focuses on applications / services not servers</li>
+        <li>Small, focused service which does a couple of things well (small, modular utilities FTW!)</li>
+        <li>Makes building large and highly available applications easier</li>
+      </ul>
+    </article>
+  </slide>
+
+
+  <slide class="segue red nobackground">
+    <article>
+      <hgroup>
+        <h2>Heartbeating in Service Registry</h2>
+      </hgroup>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>What is heartbeating?</h2>
+    </hgroup>
+    <article class="bigger">
+      <ul>
+        <li>Heartbeating is letting us know that your service is still alive</li>
+        <li>If we don't receive a heartbeat in defined time interval, we treat service as dead / timed out</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>What is heartbeating?</h2>
+    </hgroup>
+    <article class="bigger">
+      <p><img src="images/heartbeating_ws_dump.png" class="centered" /></p>
+    </article>
+  </slide>
+
+
+  <slide>
+    <hgroup>
+      <h2>What is heartbeating?</h2>
+    </hgroup>
+    <article class="bigger">
+      <p><img src="images/events_feed_timeline_visualization.png" class="centered" /></p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>How heartbeating works (high-level)</h2>
+    </hgroup>
+    <article class="bigger">
+      <p><img src="images/heartbeating_flow_chart.png" class="centered" /></p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Validating the token (high-level)</h2>
+    </hgroup>
+    <article class="bigger">
+      <p><img src="images/token_validation.png" class="centered" /></p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Example heartbeat request</h2>
+    </hgroup>
+    <article class="bigger">
+    <pre class="brush:javascript">
+{
+    "token": "25e4e1d0-c18e-11e2-98ba-7426829cefcf"
+}
+    </pre>
+    <ul>
+      <li>Token is a opaque string to the user</li>
+      <li>For us, it's a Time UUID which contains a current heartbeat deadline</li>
+    </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Implementing this on top of Cassandra</h2>
+    </hgroup>
+    <article class="bigger">
+    <ul>
+      <li>Why Cassandra?
+        <ul>
+          <li>We know it well</li>
+          <li>Good distributed architecture and capabilities</li>
+          <li>Easy to operate</li>
+          <li>Matches our service HA and consistency requirements</li>
+        </ul>
+      </li>
+    </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Things to know about Cassandra</h2>
+    </hgroup>
+    <article class="bigger">
+    <ul>
+      <li>Because of the underlying storage format* and the way deletes works, it's usually** a bad fit for:
+        <ul>
+          <li>Queue like datasets</li>
+          <li>Delete heavy datasets</li>
+        </ul>
+      </li>
+    </ul>
+    <p>* Log structured append only files (and sstables), not a unique problem to Cassandra</p>
+    <p>** Depends on data model and compaction strategy, there are ways to work around it</p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Distributed deletes and tombstones</h2>
+    </hgroup>
+    <article class="bigger">
+    <ul>
+      <li>When a user deletes a column, it's not actually deleted. It's just marked to be deleted and converted to a tombstone</li>
+      <li>Tombstones eventually get deleted during a minor or major compaction*</li>
+    </ul>
+    <p>* It's complex and depends on multiple factors (is the deleted column located in multiple sstable files, etc.)</p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>How do tombstones affect range query reads?</h2>
+    </hgroup>
+    <article class="smaller">
+    <p><img src="images/cassandra_tombstones.png" class="centered" /></p>
+    <ul>
+      <li>Gimme a single column (e.g. c5) - no biggie, uses bloom filter and pointer to a offset in a sstable file, skips tombstones</li>
+      <li>Gimme all the columns between c5 and c10 (inclusive) - huston, we have a problem (need to do late filtering)!</li>
+    </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Service Registry, heartbeating and data model</h2>
+    </hgroup>
+    <article class="smaller">
+    <pre>
+CREATE COLUMNFAMILY heartbeat_markers (
+  KEY ascii PRIMARY KEY
+) WITH comparator=uuid;
+
+ALTER COLUMNFAMILY heartbeat_markers WITH gc_grace_seconds=108000;
+ALTER COLUMNFAMILY heartbeat_markers WITH caching='keys_only';
+</pre>
+    </article>
+
+    <ul>
+      <li>Row key is account id</li>
+      <li>Column name is a Time UUID</li>
+      <li>Column value contains a service id</li>
+    </ul>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>How it works?</h2>
+    </hgroup>
+    <article class="bigger">
+    <ul>
+      <li>On heartbeat, insert a new column (future deadline)</li>
+      <li>On rectification, delete all the columns from START_TIME to NOW</li>
+      <li>Rectification - repair on read (similar to Cassandra)</li>
+    </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>How it works?</h2>
+    </hgroup>
+    <article class="bigger">
+      <p><img src="images/heartbeat_markers.png" class="centered" /></p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>How we avoid the tombstone problem?</h2>
+    </hgroup>
+    <article class="bigger">
+    <ul>
+      <li>Cassandra 1.2.x has improved support for tombstone removal during minor compactions</li>
+      <li>Low gc_grace_seconds</li>
+      <li>Small range queries</li>
+      <li>Rectifier service</li>
+      <li>Sharding across multiple rows</li>
+    </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Other possible ways to mitigate / avoid this problem</h2>
+    </hgroup>
+    <article class="bigger">
+    <ul>
+      <li>Use a database which is more appropriate the type of data you store</li>
+      <li>Re-create column family (TRUNCATE + remove data file)</li>
+    </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>More Info and Links</h2>
+    </hgroup>
+    <article class="bigger">
+    <ul>
+      <li>Docs - <a href="http://docs.rackspace.com/rsr/api/v1.0/sr-devguide/content/overview.html">http://docs.rackspace.com/rsr/api/v1.0/sr-devguide/content/overview.html</a></li>
+      <li>Github Repository - <a href="https://github.com/racker/service-registry">https://github.com/racker/service-registry</a></li>
+    </ul>
+    </article>
+  </slide>
+
+  <slide class="thank-you-slide segue nobackground">
+    <aside class="gdbar right"><img src="images/rax-logo-small.png"></section></aside>
+    <article class="flexbox vleft auto-fadein">
+      <h2>Thank You!</h2>
+    </article>
+    <p class="auto-fadein" data-config-contact>
+      <!-- populated from slide_config.json -->
+    </p>
+  </slide>
+
+  <slide class="backdrop"></slide>
+</slides>
+
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>
